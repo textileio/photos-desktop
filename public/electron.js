@@ -37,8 +37,8 @@ const createWindow = () => {
     show: false,
     // titleBarStyle: 'hidden',
     webPreferences: {
-      nodeIntegration: false,
-      preload: path.join(__dirname, '/preload.js')
+      nodeIntegration: false
+      // preload: path.join(__dirname, '/preload.js')
     },
     height: 500,
     width: 800

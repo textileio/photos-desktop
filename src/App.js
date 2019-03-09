@@ -7,28 +7,21 @@ import { SemanticToastContainer } from 'react-semantic-toasts'
 
 @inject('store') @observer
 class App extends Component {
-  componentDidMount() {
+  componentDidMount () {
     const { store } = this.props
-    store.checkStatus()
+    store.fetchProfile().then(() => {
+      store.fetchGroups()
+    })
   }
-  render() {
+  render () {
     const { store } = this.props
-    const view = (screen => {
-      switch (screen) {
-        case 'online':
-          return (
-            <div style={{ width: '80%', maxWidth: '500px', margin: '1em auto' }}>
-              <Main />
-            </div>
-          )
-        default:
-          return (
-            <Dimmer active={store.status !== 'online'}>
-              <Loader size='massive' />
-            </Dimmer>
-          )
-      }
-    })(store.status)
+    const view = store.online ? (
+      <Main />
+    ) : (
+      <Dimmer active={store.status !== 'online'}>
+        <Loader size='massive' />
+      </Dimmer>
+    )
     return (
       <div className='App'>
         {view}

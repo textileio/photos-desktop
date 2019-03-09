@@ -1,20 +1,27 @@
 import React, { Component } from 'react'
 import { observer, inject } from 'mobx-react'
-import { Image } from 'semantic-ui-react'
-// import Moment from 'react-moment'
-import * as Logo from './LaunchLogo@3x.png'
+import GroupList from './GroupList'
+import PhotoGrid from './PhotoGrid'
+import GroupSummary from './GroupSummary'
+import { Grid, Segment } from 'semantic-ui-react'
 
 @inject('store') @observer
 class Main extends Component {
-  render() {
-    const { store } = this.props
+  render () {
     return (
-      <div>
-        <Image centered size='medium' src={Logo} />
-        <p>
-          {store.profile.address}
-        </p>
-      </div>
+      <Grid style={{ height: '100vh' }} columns={2}>
+        <Grid.Row stretched>
+          <Grid.Column width={3}>
+            <GroupList />
+          </Grid.Column>
+          <Grid.Column stretched width={13}>
+            <GroupSummary />
+            <Segment basic>
+              <PhotoGrid />
+            </Segment>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     )
   }
 }
