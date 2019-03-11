@@ -5,7 +5,6 @@
 [![Keywords](https://img.shields.io/github/package-json/keywords/textileio/photos-desktop.svg?style=popout-square)](./package.json)
 
 [![GitHub package.json version](https://img.shields.io/github/package-json/v/textileio/photos-desktop.svg?style=popout-square)](./package.json)
-[![node (scoped)](https://img.shields.io/node/v/@textileio/photos-desktop.svg?style=popout-square)](https://www.npmjs.com/package/@textileio/js-http-client)
 [![GitHub license](https://img.shields.io/github/license/textileio/photos-desktop.svg?style=popout-square)](./LICENSE)
 [![David](https://img.shields.io/david/dev/textileio/photos-desktop.svg)](https://david-dm.org/textileio/js-http-client)
 [![CircleCI branch](https://img.shields.io/circleci/project/github/textileio/photos-desktop/master.svg?style=popout-square)](https://circleci.com/gh/textileio/js-http-client)
