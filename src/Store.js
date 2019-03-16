@@ -1,5 +1,5 @@
 import React from 'react'
-import { action, computed, observable, runInAction } from 'mobx'
+import { action, computed, observable, intercept, runInAction } from 'mobx'
 import { Textile } from '@textileio/js-http-client'
 import { toast } from 'react-semantic-toasts'
 
@@ -8,8 +8,32 @@ const textile = new Textile({
   port: 40602
 })
 
+// const feedItemExample = {
+//   date: '4 days ago',
+//   image: '/images/avatar/small/justen.jpg',
+//   meta: '41 Likes',
+//   summary: 'Justen Kitsune added 2 new photos of you',
+//   extraText: 'Look at these fun pics I found from a few years ago. Good times.',
+//   extraImages: ['/images/wireframe/image.png', '/images/wireframe/image-text.png'],
+// }
+
 // Currently a static store that fetches data from peer on init
 class Store {
+  constructor () {
+    intercept(this, 'hasUpdate', (change) => {
+      switch (change.newValue) {
+        case 'groups':
+          this.fetchGroups()
+          break
+        case 'feed':
+          this.fetchGroupData(this.currentGroupId)
+          break
+        default:
+          break
+      }
+      return null
+    })
+  }
   @action async fetchProfile () {
     try {
       const profile = await textile.profile.get()
@@ -22,10 +46,11 @@ class Store {
       })
     } catch (err) {
       toast({
+        icon: 'power cord',
         title: 'Offline?',
         description: (
           <div>
-            Looks like your Textile peer is offline
+            Looks like your Textile peer is offline&nbsp;
             <span role='img' aria-label='Sad face'>😔</span>
             <br />
             Try restarting your Textile tray app, then click this notification to reload.
@@ -71,37 +96,115 @@ class Store {
       console.log(err)
     }
   }
+  @action async addLike (id) {
+    try {
+      if (this.online) {
+        await textile.likes.add(id)
+        this.hasUpdate = 'feed'
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  @action async addComment (id, message) {
+    try {
+      if (this.online) {
+        await textile.comments.add(id, message)
+        this.hasUpdate = 'feed'
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  @action async addMessage (thread, message) {
+    try {
+      if (this.online) {
+        await textile.messages.add(thread, message)
+        this.hasUpdate = 'feed'
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  @action async addFile (thread, file, message) {
+    try {
+      if (this.online) {
+        await textile.files.addFile(thread, file, message)
+        this.hasUpdate = 'feed'
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
   @action async fetchGroupData (id) {
     try {
       if (this.online) {
+        const group = this.groups[id]
         const feed = await textile.feed.get({
-          thread: this.groups[id].id,
-          limit: 50,
-          mode: 'annotated'
+          thread: group.id,
+          limit: 50, // TODO: Configure this!
+          mode: 'annotated' // stacks
         })
         this.groups[id].feed = feed.items
-          .filter(item => item.payload['@type'] === '/Files')
           .map(item => {
-            const image = item.payload.files[0].links.large
-            const base = `${this.gateway}/ipfs/${image.hash}`
-            const src = image.key ? base + `?key=${image.key}` : base
-            return {
-              src,
-              id: item.id,
-              comments: [
-                {
-                  id: 0,
-                  ...item.payload.user,
-                  avatar: `${this.gateway}/ipfs/${item.payload.user.avatar}/0/small/d`,
-                  date: item.payload.date,
-                  body: item.payload.caption
-                }
-              ],
-              likes: [
-                { id: 'one' },
-                { id: 'two' }
-              ]
+            const payload = item.payload
+            const type = payload['@type']
+            let feedItem = {
+              id: item.block,
+              date: payload.date,
+              user: payload.user,
+              image: `${this.gateway}/ipfs/${payload.user.avatar}/0/small/d`
             }
+            // Format comments
+            if (payload.comments) {
+              feedItem.comments = payload.comments.map(item => {
+                return {
+                  ...item,
+                  image: `${this.gateway}/ipfs/${item.user.avatar}/0/small/d`
+                }
+              })
+            }
+            // Format likes
+            if (payload.likes) {
+              let liked = false
+              feedItem.likes = payload.likes.map(item => {
+                // TODO: Is this unsafe inside a map?
+                if (item.user.address === payload.user.address) {
+                  liked = true
+                }
+                return {
+                  ...item,
+                  image: `${this.gateway}/ipfs/${item.user.avatar}/0/small/d`
+                }
+              })
+              feedItem.liked = liked
+            }
+            switch (type) {
+              case '/Files':
+                feedItem.summary = `added a photo`
+                feedItem.extraText = payload.caption
+                feedItem.extraImages = payload.files.map(file => {
+                  // We use file hash directly here because we need the key anyway
+                  const base = `${this.gateway}/ipfs/${file.links.large.hash}`
+                  return file.links.large.key ? base + `?key=${file.links.large.key}` : base
+                })
+                break
+              case '/Text':
+                feedItem.extraText = payload.body
+                break
+              case '/Join':
+                feedItem.summary = `joined the '${group.name}' group`
+                break
+              case '/Comment':
+              case '/Like':
+                feedItem.target = `#${payload.target.block}`
+                feedItem.summary = `${type === '/Like' ? 'liked' : 'commented on'} a post`
+                feedItem.extraText = payload.body
+                break
+              default:
+                feedItem.summary = `updated the '${group.name}' group`
+            }
+            return feedItem
           })
       }
     } catch (err) {
@@ -116,10 +219,16 @@ class Store {
     }
     return null
   }
+  @action setCurrentItem (item) {
+    this.currentItem = item
+  }
   gateway = 'http://127.0.0.1:5052'
   profile = null
+  @observable hasUpdate = false
+  @observable imageSize = 'medium'
   @observable online = false
   @observable groups = null
+  @observable currentItem = null
   @observable currentGroupId = null
 }
 

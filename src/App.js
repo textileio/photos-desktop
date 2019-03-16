@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { observer, inject } from 'mobx-react'
 import 'react-semantic-toasts/styles/react-semantic-alert.css'
-import Main from './Main'
-import { Dimmer, Loader } from 'semantic-ui-react'
+import Main from './Containers/Main'
+import WithLoadingIndicator from './Components/WithLoadingIndicator'
 import { SemanticToastContainer } from 'react-semantic-toasts'
+
+const MainWithLoader = WithLoadingIndicator(Main)
 
 @inject('store') @observer
 class App extends Component {
@@ -15,16 +17,9 @@ class App extends Component {
   }
   render () {
     const { store } = this.props
-    const view = store.online ? (
-      <Main />
-    ) : (
-      <Dimmer active={store.status !== 'online'}>
-        <Loader size='massive' />
-      </Dimmer>
-    )
     return (
-      <div className='App'>
-        {view}
+      <div>
+        <MainWithLoader isLoading={!store.online} />
         <SemanticToastContainer />
       </div>
     )
