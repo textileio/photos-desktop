@@ -7,11 +7,16 @@
   "author": "Textile",
   "license": "MIT",
   "keywords": [
-    "desktop", "textile", "photos", "electron", "beta"
+    "desktop",
+    "textile",
+    "photos",
+    "electron",
+    "beta"
   ],
   "dependencies": {
     "@textileio/js-http-client": "^0.1.8",
     "babel-plugin-styled-components": "^1.10.0",
+    "copy-to-clipboard": "^3.0.8",
     "electron-is-dev": "^1.0.1",
     "mobx": "^5.9.0",
     "mobx-react": "^5.4.3",
@@ -48,16 +53,16 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@craco/craco": "^3.5.0",
     "@babel/core": "^7.3.4",
+    "@craco/craco": "^3.5.0",
     "babel-preset-mobx": "^2.0.0",
     "concurrently": "^4.1.0",
     "cross-env": "^5.2.0",
     "electron": "^4.0.7",
-    "react-scripts": "2.1.5",
-    "typescript": "^3.3.3333",
     "electron-builder": "^20.38.5",
     "electron-devtools-installer": "^2.2.4",
+    "react-scripts": "2.1.5",
+    "typescript": "^3.3.3333",
     "wait-on": "^3.2.0"
   },
   "build": {

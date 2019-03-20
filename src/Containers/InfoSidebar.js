@@ -6,7 +6,7 @@ import { observer, inject } from 'mobx-react'
 @inject('store') @observer
 class InfoSidebar extends Component {
   handleSidebarHide = () => {
-    this.props.store.setCurrentItem(null)
+    this.props.store.currentItemId = null
   }
   render () {
     const { store } = this.props
@@ -18,7 +18,7 @@ class InfoSidebar extends Component {
         width='wide'
         direction='right'
         onHide={this.handleSidebarHide}
-        visible={store.currentItem !== null}
+        visible={store.currentItemId !== null}
       >
         <CommentsList
           item={store.currentItem}

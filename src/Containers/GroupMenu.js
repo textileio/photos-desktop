@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Menu } from 'semantic-ui-react'
+import { Menu, Icon } from 'semantic-ui-react'
 import { observer, inject } from 'mobx-react'
 
 @inject('store') @observer
@@ -7,10 +7,10 @@ class GroupMenu extends Component {
   render () {
     const { store } = this.props
     return (
-      <Menu.Item>
-        <span>groups</span>
-        {/* <Icon name='add' /> */}
-        <Menu.Menu>
+      <Menu.Item borderless>
+        <h3 style={{ display: 'inline' }}>groups</h3>
+        <Icon style={{ cursor: 'pointer', lineHeight: '2' }} name='add' />
+        <Menu.Menu borderless>
           {store.groups && store.groups.map((group, index) => this.renderItem(index, group))}
         </Menu.Menu>
       </Menu.Item>

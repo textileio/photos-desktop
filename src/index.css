@@ -28,6 +28,10 @@ body {
   margin: 0 !important;
 }
 
+.ui.feed>.event>.content .extra {
+  margin: 0 !important;
+}
+
 .ui.feed>.event>.content .extra.images img {
   /* max-width: 80% !important; */
   width: unset !important;

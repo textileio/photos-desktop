@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Comment, Header } from 'semantic-ui-react'
 import OmniForm from './OmniForm'
+// import LazyImage from './LazyImage'
 import Moment from 'react-moment'
 
 class CommentsList extends Component {
@@ -9,7 +10,7 @@ class CommentsList extends Component {
     return (
       <div>
         <Header as='h3' dividing>comments</Header>
-        <Comment.Group style={{ display: 'flex', flexDirection: 'column-reverse' }}>
+        <Comment.Group /* style={{ display: 'flex', flexDirection: 'column-reverse' }} */>
           {item && item.comments && item.comments.map(item => this.renderItem(item))}
         </Comment.Group>
         <OmniForm onSubmit={this.props.onSubmit} />
@@ -19,12 +20,16 @@ class CommentsList extends Component {
   renderItem (item) {
     return (
       <Comment key={item.id}>
-        <Comment.Avatar src={item.image} />
+        <Comment.Avatar src={!item.user.skip ? item.image : null} />
         <Comment.Content>
-          <Comment.Author as='span'>{item.user.name}</Comment.Author>
-          <Comment.Metadata>
-            <Moment fromNow>{item.date}</Moment>
-          </Comment.Metadata>
+          {!item.user.skip &&
+          <div>
+            <Comment.Author as='span'>{item.user.name}</Comment.Author>
+            <Comment.Metadata>
+              <Moment fromNow>{item.date}</Moment>
+            </Comment.Metadata>
+          </div>
+          }
           <Comment.Text>
             {/* // TODO: This might be a js-http-client bug? */}
             {decodeURIComponent(item.body)}

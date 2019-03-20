@@ -27,15 +27,16 @@ class FeedView extends Component {
     if (store.currentGroup && store.currentGroup.feed && store.currentGroup.feed.length) {
       return (
         <Segment basic>
-          <Feed style={{ display: 'flex', flexDirection: 'column-reverse' }}>
+          <Feed /* style={{ display: 'flex', flexDirection: 'column-reverse' }} */>
             {store.currentGroup.feed
-              .map(item => {
+              .map((item, index) => {
                 return <FeedItem
                   key={item.id}
+                  index={index}
                   item={item}
                   imageSize={store.imageSize}
                   onImageClick={this.handleModalOpen}
-                  onCommentsClick={item => store.setCurrentItem(item)}
+                  onCommentsClick={id => { store.currentItemId = id }}
                   onLikesClick={item => store.addLike(item.id)}
                 />
               })}

@@ -40,6 +40,9 @@ class Store {
       if (!profile.username) {
         profile.username = profile.address.slice(-8)
       }
+      if (profile.avatar) {
+        profile.url = `${this.gateway}/ipfs/${profile.avatar}/0/small/d`
+      }
       runInAction(() => {
         this.profile = profile
         this.online = true
@@ -145,10 +148,18 @@ class Store {
           limit: 50, // TODO: Configure this!
           mode: 'annotated' // stacks
         })
-        this.groups[id].feed = feed.items
+        let lastUserAddress
+        let lastType
+        this.groups[id].feed = feed.items.slice().reverse()
           .map(item => {
             const payload = item.payload
             const type = payload['@type']
+            // Can 'skip' user info if on-going items
+            if (lastUserAddress === payload.user.address && lastType === type) {
+              payload.user.skip = true
+            }
+            lastUserAddress = payload.user.address
+            lastType = type
             let feedItem = {
               id: item.block,
               date: payload.date,
@@ -157,7 +168,12 @@ class Store {
             }
             // Format comments
             if (payload.comments) {
-              feedItem.comments = payload.comments.map(item => {
+              let commentUserAddress
+              feedItem.comments = (payload.comments || []).slice().reverse().map(item => {
+                if (commentUserAddress === item.user.address) {
+                  item.user.skip = true
+                }
+                commentUserAddress = item.user.address
                 return {
                   ...item,
                   image: `${this.gateway}/ipfs/${item.user.avatar}/0/small/d`
@@ -167,7 +183,7 @@ class Store {
             // Format likes
             if (payload.likes) {
               let liked = false
-              feedItem.likes = payload.likes.map(item => {
+              feedItem.likes = (payload.likes || []).map(item => {
                 // TODO: Is this unsafe inside a map?
                 if (item.user.address === payload.user.address) {
                   liked = true
@@ -194,6 +210,7 @@ class Store {
                 break
               case '/Join':
                 feedItem.summary = `joined the '${group.name}' group`
+                feedItem.comments = null
                 break
               case '/Comment':
               case '/Like':
@@ -203,6 +220,7 @@ class Store {
                 break
               default:
                 feedItem.summary = `updated the '${group.name}' group`
+                feedItem.comments = null
             }
             return feedItem
           })
@@ -219,8 +237,11 @@ class Store {
     }
     return null
   }
-  @action setCurrentItem (item) {
-    this.currentItem = item
+  @computed get currentItem () {
+    if (this.currentGroup && this.currentGroup.feed && this.currentItemId !== null) {
+      return this.currentGroup.feed[this.currentItemId]
+    }
+    return null
   }
   gateway = 'http://127.0.0.1:5052'
   profile = null
@@ -228,7 +249,7 @@ class Store {
   @observable imageSize = 'medium'
   @observable online = false
   @observable groups = null
-  @observable currentItem = null
+  @observable currentItemId = null
   @observable currentGroupId = null
 }
 

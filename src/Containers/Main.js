@@ -6,7 +6,8 @@ import FeedView from './FeedView'
 import InfoSidebar from './InfoSidebar'
 import OmniForm from '../Components/OmniForm'
 import GroupSummary from '../Components/GroupSummary'
-import { Grid, Menu, Header, Sidebar } from 'semantic-ui-react'
+import copy from 'copy-to-clipboard'
+import { Grid, Menu, Sidebar, Image, Feed, Label } from 'semantic-ui-react'
 
 @inject('store') @observer
 class Main extends Component {
@@ -30,7 +31,16 @@ class Main extends Component {
           <Grid stretched celled columns={2}>
             <Grid.Row>
               <Grid.Column width={3}>
-                <Header as='h3'>{store.profile.username}</Header>
+                <Feed.Label>
+                  <Image avatar src={store.profile.url} />
+                  <span
+                    title='click to copy node address'
+                    onClick={() => { copy(store.profile.address) }}
+                    style={{ fontWeight: 'bold', fontSize: '1.2em', cursor: 'pointer' }}
+                  >
+                    {store.profile.username}
+                  </span>
+                </Feed.Label>
               </Grid.Column>
               <Grid.Column width={13}>
                 <GroupSummary group={store.currentGroup} />
@@ -38,12 +48,12 @@ class Main extends Component {
             </Grid.Row>
             <Grid.Row>
               <Grid.Column width={3} style={{ overflowY: 'auto', height: 'calc(100vh - 75px)' }}>
-                <Menu secondary fluid vertical borderless>
+                <Menu fluid vertical borderless>
                   <GroupMenu />
                   <PeerMenu />
                 </Menu>
               </Grid.Column>
-              <Grid.Column width={13}>
+              <Grid.Column width={13} style={{ padding: 0 }}>
                 <Grid.Row style={{ overflowY: 'auto', height: 'calc(100vh - 140px)' }}>
                   <FeedView />
                 </Grid.Row>
