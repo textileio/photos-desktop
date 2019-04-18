@@ -18,7 +18,7 @@ class LazyImage extends Component {
     const { size } = this.props
     const { onScreen } = this.state
     return (
-      <Visibility fireOnMount onUpdate={this.handleVisible}>
+      <Visibility offset={-300} fireOnMount onUpdate={this.handleVisible}>
         {onScreen
           ? <Image {...this.props} />
           : <Loader active inline='centered' size={size} />}

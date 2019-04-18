@@ -1,0 +1,70 @@
+version: 2.1
+
+jobs:
+
+  build:
+    macos:
+      xcode: "10.1.0"
+    environment:
+      GOPATH: /Users/distiller/go
+      GOROOT: /usr/local/go
+      BREWBIN: /usr/local/opt/go/bin
+    steps:
+      - checkout
+      - run:
+          name: install js deps
+          command: |
+            yarn install
+      - run:
+          name: compile
+          command: |
+            yarn dist
+      - run:
+          name: collect artifacts
+          command: |
+            VERSION=$(echo $CIRCLE_SHA1 | cut -c -7)
+            if [ "${CIRCLE_TAG}" != "" ]; then
+                VERSION=${CIRCLE_TAG}
+            fi
+            OUT=~/dist
+            mkdir -p ${OUT}
+            WD=~/project
+            cd ${WD}/dist/mac
+            tar -czvf Photos_${VERSION}_mac-amd64.tar.gz Photos.app
+            mv Photos_${VERSION}_mac-amd64.tar.gz ${OUT}/
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - dist
+      - store_artifacts:
+          path: ~/dist
+
+  release:
+    docker:
+      - image: cibuilds/github:0.10
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/
+      - deploy:
+          name: release all
+          command: |
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${CIRCLE_TAG} ~/dist/
+workflows:
+  version: 2
+  desktop:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: master
+            tags:
+              only: /.*/
+      - release:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/

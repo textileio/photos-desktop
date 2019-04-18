@@ -104,6 +104,28 @@ const generateMenu = () => {
       ]
     },
     {
+      label: 'Edit',
+      submenu: [{
+        role: 'undo'
+      },
+      {
+        role: 'redo'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        role: 'cut'
+      },
+      {
+        role: 'copy'
+      },
+      {
+        role: 'paste'
+      }
+      ]
+    },
+    {
       role: 'window',
       submenu: [{ role: 'minimize' }, { role: 'close' }]
     },
@@ -112,17 +134,13 @@ const generateMenu = () => {
       submenu: [
         {
           click () {
-            require('electron').shell.openExternal(
-              'https://textile.photos'
-            )
+            shell.openExternal('https://textile.photos')
           },
           label: 'Learn More'
         },
         {
           click () {
-            require('electron').shell.openExternal(
-              'https://github.com/textileio/photos-desktop/issues'
-            )
+            shell.openExternal('https://github.com/textileio/photos-desktop/issues')
           },
           label: 'File Issue on GitHub'
         }

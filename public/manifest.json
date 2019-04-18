@@ -1,6 +1,6 @@
 {
-  "short_name": "photos-desktop",
-  "name": "Photos Desktop",
+  "short_name": "Photos",
+  "name": "Textile Photos",
   "icons": [
     {
       "src": "favicon.ico",

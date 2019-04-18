@@ -12,7 +12,9 @@ class App extends Component {
   componentDidMount () {
     const { store } = this.props
     store.fetchProfile().then(() => {
-      store.fetchGroups()
+      store.fetchGroups().then(() => {
+        store.fetchContacts()
+      })
     })
   }
   render () {

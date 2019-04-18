@@ -14,7 +14,7 @@
     "beta"
   ],
   "dependencies": {
-    "@textileio/js-http-client": "^0.1.8",
+    "@textile/js-http-client": "^0.2.8",
     "babel-plugin-styled-components": "^1.10.0",
     "copy-to-clipboard": "^3.0.8",
     "electron-is-dev": "^1.0.1",
@@ -66,9 +66,9 @@
     "wait-on": "^3.2.0"
   },
   "build": {
-    "appId": "io.textile.desktop.photos",
+    "appId": "io.textile.photos.desktop",
     "compression": "normal",
-    "productName": "photos-desktop",
+    "productName": "Photos",
     "files": [
       "build/**/*",
       "node_modules/**/*",

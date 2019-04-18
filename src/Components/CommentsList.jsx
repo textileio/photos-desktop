@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { Comment, Header } from 'semantic-ui-react'
 import OmniForm from './OmniForm'
-// import LazyImage from './LazyImage'
 import Moment from 'react-moment'
+
+// TODO: Get this from the store
+const GATEWAY = 'http://127.0.0.1:5052'
 
 class CommentsList extends Component {
   render () {
@@ -10,7 +12,7 @@ class CommentsList extends Component {
     return (
       <div>
         <Header as='h3' dividing>comments</Header>
-        <Comment.Group /* style={{ display: 'flex', flexDirection: 'column-reverse' }} */>
+        <Comment.Group>
           {item && item.comments && item.comments.map(item => this.renderItem(item))}
         </Comment.Group>
         <OmniForm onSubmit={this.props.onSubmit} />
@@ -20,7 +22,7 @@ class CommentsList extends Component {
   renderItem (item) {
     return (
       <Comment key={item.id}>
-        <Comment.Avatar src={!item.user.skip ? item.image : null} />
+        <Comment.Avatar src={`${GATEWAY}/ipfs/${item.user.avatar}/0/small/d`} />
         <Comment.Content>
           {!item.user.skip &&
           <div>
@@ -30,13 +32,7 @@ class CommentsList extends Component {
             </Comment.Metadata>
           </div>
           }
-          <Comment.Text>
-            {/* // TODO: This might be a js-http-client bug? */}
-            {decodeURIComponent(item.body)}
-          </Comment.Text>
-          {/* <Comment.Actions>
-            Reply
-          </Comment.Actions> */}
+          <Comment.Text>{item.body}</Comment.Text>
         </Comment.Content>
       </Comment>
     )

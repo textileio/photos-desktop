@@ -25,9 +25,6 @@ class GroupSummary extends Component {
               <List.Item>
                 <Icon name='share square' />{group.sharing ? group.sharing.toLowerCase() : 'notshared'}
               </List.Item>
-              <List.Item>
-                <Icon name='users' /> {group.members.length}
-              </List.Item>
               {group.head_block &&
                 <List.Item>
                   <Icon name='calendar check outline' />
