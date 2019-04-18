@@ -38,6 +38,10 @@
     "dist": "build --x64 --macos --c.extraMetadata.main=public/electron.js",
     "build": "craco build",
     "test": "craco test",
+    "credit": "node ./scripts/contributors.js",
+    "preversion": "yarn credit",
+    "release": "yarn version --patch",
+    "postversion": "git push --follow-tags",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

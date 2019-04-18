@@ -14,6 +14,12 @@
 
 Join us on our [public Slack channel](https://slack.textile.io/) for news, discussions, and status updates. For current status, and where you can help, please see [issue #1](https://github.com/textileio/js-http-client/issues/1).
 
+## Table of Contents
+
+<!-- AUTO-GENERATED-CONTENT:START (TOC) -->
+
+<!-- AUTO-GENERATED-CONTENT:END -->
+
 ## Background
 
 [Textile](https://www.textile.io) provides encrypted, recoverable, schema-based, and cross-application data storage built on [IPFS](https://github.com/ipfs) and [libp2p](https://github.com/libp2p). We like to think of it as a decentralized data wallet with built-in protocols for sharing and recovery, or more simply, **an open and programmable iCloud**.
@@ -74,9 +80,11 @@ Textile's Photos Desktop app is a work in progress. As such, there's a few thing
   
  Before you get started, be sure to read our [contributors guide](./CONTRIBUTING.md) and our [contributor covenant code of conduct](./CODE_OF_CONDUCT.md).
 
-### Contributors
+## Contributors
+<!-- Update with yarn credit -->
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (CONTRIBUTORS) -->
 
-* Carson Farmer <carson@textile.io>
+<!-- ⛔️ AUTO-GENERATED-CONTENT:END -->
 
 ## License
 
