@@ -6,13 +6,19 @@
 
 [![GitHub package.json version](https://img.shields.io/github/package-json/v/textileio/photos-desktop.svg?style=popout-square)](./package.json)
 [![GitHub license](https://img.shields.io/github/license/textileio/photos-desktop.svg?style=popout-square)](./LICENSE)
-[![David](https://img.shields.io/david/dev/textileio/photos-desktop.svg)](https://david-dm.org/textileio/js-http-client)
-[![CircleCI branch](https://img.shields.io/circleci/project/github/textileio/photos-desktop/master.svg?style=popout-square)](https://circleci.com/gh/textileio/js-http-client)
+[![David](https://img.shields.io/david/dev/textileio/photos-desktop.svg)](https://david-dm.org/textileio/photos-desktop)
+[![CircleCI branch](https://img.shields.io/circleci/project/github/textileio/photos-desktop/master.svg?style=popout-square)](https://circleci.com/gh/textileio/photos-desktop)
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=popout-square)](https://github.com/RichardLitt/standard-readme)
 
 > Textile Photos... for desktop!
 
 Join us on our [public Slack channel](https://slack.textile.io/) for news, discussions, and status updates. For current status, and where you can help, please see [issue #1](https://github.com/textileio/js-http-client/issues/1).
+
+## Table of Contents
+
+<!-- AUTO-GENERATED-CONTENT:START (TOC) -->
+
+<!-- AUTO-GENERATED-CONTENT:END -->
 
 ## Background
 
@@ -74,9 +80,11 @@ Textile's Photos Desktop app is a work in progress. As such, there's a few thing
   
  Before you get started, be sure to read our [contributors guide](./CONTRIBUTING.md) and our [contributor covenant code of conduct](./CODE_OF_CONDUCT.md).
 
-### Contributors
+## Contributors
+<!-- Update with yarn credit -->
+<!-- ⛔️ AUTO-GENERATED-CONTENT:START (CONTRIBUTORS) -->
 
-* Carson Farmer <carson@textile.io>
+<!-- ⛔️ AUTO-GENERATED-CONTENT:END -->
 
 ## License
 

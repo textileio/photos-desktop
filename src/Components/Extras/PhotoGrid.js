@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Grid, Modal, Image, Icon, Label, Message } from 'semantic-ui-react'
 import LazyImage from './LazyImage'
-import CommentsList from './CommentsList'
+import MessageList from './MessageList'
 import AnimateHeight from 'react-animate-height'
 import styled from 'styled-components'
 import Filler from './Filler'
@@ -95,7 +95,7 @@ class PhotoGrid extends Component {
                   }
                 }}
               >
-                <CommentsList comments={comments} />
+                <MessageList comments={comments} />
               </AnimateHeight>
             </Modal.Description>
             <div ref={(el) => { this.scrollDiv = el }} />
