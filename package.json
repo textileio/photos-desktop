@@ -65,6 +65,8 @@
     "electron": "^4.0.7",
     "electron-builder": "^20.38.5",
     "electron-devtools-installer": "^2.2.4",
+    "markdown-magic": "^0.1.25",
+    "markdown-magic-github-contributors": "^0.0.3",
     "react-scripts": "2.1.5",
     "typescript": "^3.3.3333",
     "wait-on": "^3.2.0"
