@@ -1,49 +1,50 @@
-import React, { Component, createRef } from 'react'
-import { Feed, Segment, Message, Modal, Visibility, Ref, Icon } from 'semantic-ui-react'
+import React, { createRef, SyntheticEvent } from 'react'
+import { Feed, Segment, Message, Modal, Visibility, Ref, Icon, VisibilityEventData } from 'semantic-ui-react'
 import LazyImage from '../Components/LazyImage'
 import FeedItem from '../Components/FeedItem'
-import { observer, inject } from 'mobx-react'
-// import ScrollToBottom from 'react-scroll-to-bottom'
-// import ReactPullToRefresh from 'react-pull-to-refresh'
+import { observer } from 'mobx-react'
+import { ConnectedComponent, connect } from '../Components/ConnectedComponent'
+import { Stores, FeedEvent } from '../Store'
 
-@inject('store') @observer
-class FeedView extends Component {
+@connect('store') @observer
+class FeedView extends ConnectedComponent<{}, Stores> {
   state = {
     modalOpen: false,
-    src: undefined,
-    atBottom: true
+    src: undefined
   }
-  handleModalOpen = event => {
-    this.setState({ modalOpen: true, src: event.target.src })
+  private visibilityRef = createRef<HTMLDivElement>()
+  private feedRef = createRef<HTMLDivElement>()
+  handleModalOpen = (event: SyntheticEvent) => {
+    const target = event.target as HTMLImageElement
+    this.setState({ modalOpen: true, src: target.src })
   }
   handleModalClose = () => this.setState({ modalOpen: false, src: undefined })
-  componentDidUpdate () {
+  componentDidUpdate() {
     if (this.feedRef.current) {
       this.feedRef.current.scrollIntoView(false)
     }
   }
-  handleRefresh = (e, { calculations }) => {
-    this.atBottom = calculations.bottomVisible
-  }
+  // handleRefresh = (_: null, data: VisibilityEventData) => {
+  //   this.atBottom = data.calculations.bottomVisible
+  // }
   handleMore = () => {
-    const { store } = this.props
-    const feed = store.currentGroup.feed
-    if (this.visibilityRef.current) {
+    const { store } = this.stores
+    const feed = store.currentFeed
+    if (this.visibilityRef.current && feed) {
       const height = this.visibilityRef.current.clientHeight
-      if (feed && feed.next) {
+      if (feed.next && this.visibilityRef.current && store.currentGroupId !== undefined) {
         store.fetchGroupData(store.currentGroupId, feed.count + 10).then(() => {
-          this.visibilityRef.current.scrollTop = height * 1.5
+          if (this.visibilityRef.current) {
+            this.visibilityRef.current.scrollTop = height
+          }
         })
       }
     }
   }
-  atBottom = true
-  visibilityRef = createRef()
-  feedRef = createRef()
-  render () {
-    const { store } = this.props
-    if (store.currentGroup && store.currentGroup.feed && store.currentGroup.feed.items.length) {
-      const feed = store.currentGroup.feed
+  render() {
+    const { store } = this.stores
+    if (store.currentGroup && store.currentFeed && store.currentFeed.items.length) {
+      const feed = store.currentFeed
       return (
         <Ref innerRef={this.visibilityRef}>
           <Segment basic style={{ overflowY: 'auto', height: 'calc(100vh - 125px)' }}>
@@ -52,24 +53,22 @@ class FeedView extends Component {
               <Icon name='arrow circle up' size='large' />
             </div>
             }
-            <Visibility onUpdate={this.handleRefresh}>
               <Ref innerRef={this.feedRef}>
                 <Feed style={{ display: 'flex', flexDirection: 'column-reverse' }}>
-                  {store.currentGroup.feed.items
-                    .map((item, index) => {
+                  {feed.items
+                    .map((item: FeedEvent, index: number) => {
                       return <FeedItem
                         key={item.id}
                         index={index}
                         item={item}
                         imageSize={store.imageSize}
                         onImageClick={this.handleModalOpen}
-                        onCommentsClick={id => { store.currentItemId = id }}
-                        onLikesClick={item => { store.addLike(item.id) }}
+                        onCommentsClick={(id) => { store.currentItemId = id }}
+                        onLikesClick={(item) => { store.addLike(item.id) }}
                       />
                     })}
                 </Feed>
               </Ref>
-            </Visibility>
             <Modal
               open={this.state.modalOpen}
               onClose={this.handleModalClose}

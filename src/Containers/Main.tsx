@@ -1,29 +1,34 @@
-import React, { Component } from 'react'
-import { observer, inject } from 'mobx-react'
+import React from 'react'
+import { observer } from 'mobx-react'
 import GroupMenu from './GroupMenu'
 import PeerMenu from './PeerMenu'
 import FeedView from './FeedView'
 import InfoSidebar from './InfoSidebar'
-import OmniForm from '../Components/OmniForm'
+import OmniForm, { OmniFormState } from '../Components/OmniForm'
 import GroupSummary from '../Components/GroupSummary'
 import copy from 'copy-to-clipboard'
 import { Grid, Sidebar, Image, Feed } from 'semantic-ui-react'
+import { ConnectedComponent, connect } from '../Components/ConnectedComponent'
+import { Stores } from '../Store'
 
-@inject('store') @observer
-class Main extends Component {
-  handleSubmit = data => {
-    const { store } = this.props
-    const group = store.groups[store.currentGroupId].id
-    if (data.file !== null) {
-      const form = new window.FormData()
-      form.append('file', data.file, data.filename)
-      store.addFile(group, form, data.caption)
-    } else if (data.message !== '') {
+@connect('store') @observer
+class Main extends ConnectedComponent<{}, Stores> {
+  handleSubmit = (data: OmniFormState) => {
+    const { store } = this.stores
+    if (!store.groups || store.currentGroupId === undefined) {
+      return
+    }
+    const group = store.groups.items[store.currentGroupId].id
+    if (data.file) {
+      const form = new FormData()
+      form.append('file', data.file, data.file.name)
+      store.addFile(group, form, data.message || '')
+    } else if (data.message) {
       store.addMessage(group, data.message)
     }
   }
-  render () {
-    const { store } = this.props
+  render() {
+    const { store } = this.stores
     return (
       <Sidebar.Pushable>
         <InfoSidebar />
@@ -32,13 +37,13 @@ class Main extends Component {
             <Grid.Row>
               <Grid.Column width={3}>
                 <Feed.Label style={{ maxWidth: 'calc(100%)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  <Image avatar src={store.profile.url} />
+                  {store.profile && <Image avatar src={`${store.gateway}/ipfs/${store.profile.avatar}/0/small/d`} />}
                   <span
                     title='click to copy node address'
-                    onClick={() => { copy(store.profile.address) }}
+                    onClick={() => { copy(store.profile ? store.profile.address : '') }}
                     style={{ fontWeight: 'bold', fontSize: '1.2em', cursor: 'pointer' }}
                   >
-                    {store.profile.name}
+                    {store.profile && store.profile.name}
                   </span>
                 </Feed.Label>
               </Grid.Column>

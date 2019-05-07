@@ -1,7 +1,4 @@
 body {
-  /* height: 100vh !important; */
-  /* margin: 10px !important; */
-  /* overflow: hidden; */
   font-family: "Biotif", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif !important;
@@ -11,6 +8,11 @@ body {
 
 ::-webkit-scrollbar, ::-webkit-scrollbar-track {
   border-radius: 10px !important;
+}
+
+.ui.feed>.event>.content .extra.images img {
+  max-width: 80% !important;
+  width: unset !important;
 }
 
 .ui.comments .comment .avatar img, .ui.comments .comment img.avatar {
@@ -28,21 +30,8 @@ body {
   margin: 0 !important;
 }
 
-.ui.feed>.event>.content .extra {
-  margin: 0 !important;
-}
-
-.ui.feed>.event>.content .extra.images img {
-  /* max-width: 80% !important; */
-  width: unset !important;
-}
-
 .ui.feed>.event>.content .meta .like:hover .comment.icon {
   color:gray;
-}
-
-.ui.grid>.column:not(.row), .ui.grid>.row>.column {
-  padding-right: 0 !important;
 }
 
 @font-face {
@@ -50,7 +39,7 @@ body {
   font-weight: normal;
   src:
     local('Biotif-Regular'),
-    url(./Fonts/Biotif-Regular.ttf) format('truetype');
+    url(./Assets/Fonts/Biotif-Regular.ttf) format('truetype');
 }
 
 @font-face {
@@ -58,7 +47,7 @@ body {
   font-weight: 500;
   src:
     local('Biotif-Medium'),
-    url(./Fonts/Biotif-Medium.ttf) format('truetype');
+    url(./Assets/Fonts/Biotif-Medium.ttf) format('truetype');
 }
 
 @font-face {
@@ -66,5 +55,5 @@ body {
   font-weight: bold;
   src:
     local('Biotif-Bold'),
-    url(./Fonts/Biotif-Bold.ttf) format('truetype');
+    url(./Assets/Fonts/Biotif-Bold.ttf) format('truetype');
 }

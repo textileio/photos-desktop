@@ -17,7 +17,18 @@ Join us on our [public Slack channel](https://slack.textile.io/) for news, discu
 ## Table of Contents
 
 <!-- AUTO-GENERATED-CONTENT:START (TOC) -->
-
+- [Background](#background)
+- [Textile Photos](#textile-photos)
+- [Use it](#use-it)
+- [Develop](#develop)
+  * [Get started](#get-started)
+  * [`yarn start`](#yarn-start)
+  * [`yarn dev`](#yarn-dev)
+  * [`yarn dist`](#yarn-dist)
+- [Maintainer](#maintainer)
+- [Contributing](#contributing)
+- [Contributors](#contributors)
+- [License](#license)
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ## Background
@@ -83,6 +94,9 @@ Textile's Photos Desktop app is a work in progress. As such, there's a few thing
 ## Contributors
 <!-- Update with yarn credit -->
 <!-- ⛔️ AUTO-GENERATED-CONTENT:START (CONTRIBUTORS) -->
+| **Commits** | **Contributor** |  
+| --- | --- |  
+| 3 | [carsonfarmer](https://github.com/carsonfarmer) |  
 
 <!-- ⛔️ AUTO-GENERATED-CONTENT:END -->
 
