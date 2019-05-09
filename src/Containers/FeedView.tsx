@@ -6,12 +6,18 @@ import { observer } from 'mobx-react'
 import { ConnectedComponent, connect } from '../Components/ConnectedComponent'
 import { Stores, FeedEvent } from '../Store'
 
+interface FeedViewState {
+  modalOpen: boolean
+  src?: string
+}
+
 @connect('store') @observer
-class FeedView extends ConnectedComponent<{}, Stores> {
+class FeedView extends ConnectedComponent<{}, Stores, FeedViewState> {
   state = {
     modalOpen: false,
     src: undefined
   }
+  private shouldScroll: boolean = true
   private visibilityRef = createRef<HTMLDivElement>()
   private feedRef = createRef<HTMLDivElement>()
   handleModalOpen = (event: SyntheticEvent) => {
@@ -19,9 +25,13 @@ class FeedView extends ConnectedComponent<{}, Stores> {
     this.setState({ modalOpen: true, src: target.src })
   }
   handleModalClose = () => this.setState({ modalOpen: false, src: undefined })
+  componentWillUpdate(_: {}, nextState: FeedViewState) {
+    this.shouldScroll = !((!nextState.modalOpen && this.state.modalOpen) || nextState.modalOpen)
+  }
   componentDidUpdate() {
-    if (this.feedRef.current) {
+    if (this.feedRef.current && this.shouldScroll) {
       this.feedRef.current.scrollIntoView(false)
+      this.shouldScroll = false
     }
   }
   // handleRefresh = (_: null, data: VisibilityEventData) => {
@@ -72,7 +82,7 @@ class FeedView extends ConnectedComponent<{}, Stores> {
             <Modal
               open={this.state.modalOpen}
               onClose={this.handleModalClose}
-              dimmer='blurring'
+              dimmer
               basic
               content={
                 <LazyImage style={{ maxHeight: '90vh' }} centered src={this.state.src} />

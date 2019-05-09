@@ -66,7 +66,7 @@ export class AppStore implements Store {
       toast({
         icon: 'power cord',
         title: 'Offline?',
-        description: `Looks like your Textile peer is offline&nbsp;😔Try restarting your Textile tray app.`,
+        description: `Looks like your Textile peer is offline 😔...`,
         time: 0
       })
     }
