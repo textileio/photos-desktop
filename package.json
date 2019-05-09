@@ -14,9 +14,10 @@
     "beta"
   ],
   "dependencies": {
-    "@textile/js-http-client": "0.2.16",
+    "@textile/js-http-client": "0.2.18",
     "babel-plugin-styled-components": "^1.10.0",
     "copy-to-clipboard": "^3.0.8",
+    "electron-is-dev": "^1.1.0",
     "mobx": "^5.9.0",
     "mobx-react": "^5.4.3",
     "moment": "^2.24.0",
@@ -34,7 +35,7 @@
     "dev": "concurrently \"cross-env BROWSER=none yarn craco start\" \"wait-on http://localhost:3000 && electron .\"",
     "pack": "electron-builder --dir",
     "predist": "yarn build",
-    "dist": "build --x64 --macos --c.extraMetadata.main=public/electron.js",
+    "dist": "build --x64 --c.extraMetadata.main=public/electron.js",
     "build": "craco build",
     "test": "craco test",
     "credit": "node ./scripts/contributors.js",
@@ -77,6 +78,7 @@
   },
   "build": {
     "appId": "io.textile.photos.desktop",
+    "artifactName": "Photos-${version}.${ext}",
     "compression": "normal",
     "productName": "Photos",
     "files": [
