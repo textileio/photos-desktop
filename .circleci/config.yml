@@ -1,7 +1,6 @@
 version: 2.1
 
 jobs:
-
   build:
     macos:
       xcode: "10.1.0"
@@ -18,7 +17,7 @@ jobs:
       - run:
           name: compile
           command: |
-            yarn dist
+            yarn dist --macos --win32 --linux
       - run:
           name: collect artifacts
           command: |
@@ -26,18 +25,15 @@ jobs:
             if [ "${CIRCLE_TAG}" != "" ]; then
                 VERSION=${CIRCLE_TAG}
             fi
-            OUT=~/dist
+            OUT=~/output
             mkdir -p ${OUT}
-            WD=~/project
-            cd ${WD}/dist/mac
-            tar -czvf Photos_${VERSION}_mac-amd64.tar.gz Photos.app
-            mv Photos_${VERSION}_mac-amd64.tar.gz ${OUT}/
+            mv ~/project/Photos-${VERSION}.* ${OUT}/
       - persist_to_workspace:
           root: ~/
           paths:
-            - dist
+            - output
       - store_artifacts:
-          path: ~/dist
+          path: ~/output
 
   release:
     docker:
@@ -49,7 +45,7 @@ jobs:
       - deploy:
           name: release all
           command: |
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${CIRCLE_TAG} ~/dist/
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${CIRCLE_TAG} ~/output/
 workflows:
   version: 2
   desktop:
