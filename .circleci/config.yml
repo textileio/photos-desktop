@@ -55,7 +55,7 @@ workflows:
             branches:
               only: master
             tags:
-              only: /.*/
+              only: /^v.*/
       - release:
           requires:
             - build
