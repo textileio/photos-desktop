@@ -1,6 +1,6 @@
 {
   "name": "photos-desktop",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Textile Photos Desktop",
   "homepage": "./",
   "main": "public/electron.js",
