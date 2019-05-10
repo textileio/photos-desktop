@@ -78,7 +78,7 @@
   },
   "build": {
     "appId": "io.textile.photos.desktop",
-    "artifactName": "Photos-${version}.${ext}",
+    "artifactName": "Photos-v${version}.${ext}",
     "compression": "normal",
     "productName": "Photos",
     "files": [
