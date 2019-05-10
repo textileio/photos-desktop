@@ -14,10 +14,10 @@
     "beta"
   ],
   "dependencies": {
-    "@textile/js-http-client": "^0.2.8",
+    "@textile/js-http-client": "0.2.18",
     "babel-plugin-styled-components": "^1.10.0",
     "copy-to-clipboard": "^3.0.8",
-    "electron-is-dev": "^1.0.1",
+    "electron-is-dev": "^1.1.0",
     "mobx": "^5.9.0",
     "mobx-react": "^5.4.3",
     "moment": "^2.24.0",
@@ -35,7 +35,7 @@
     "dev": "concurrently \"cross-env BROWSER=none yarn craco start\" \"wait-on http://localhost:3000 && electron .\"",
     "pack": "electron-builder --dir",
     "predist": "yarn build",
-    "dist": "build --x64 --macos --c.extraMetadata.main=public/electron.js",
+    "dist": "build --x64 --c.extraMetadata.main=public/electron.js",
     "build": "craco build",
     "test": "craco test",
     "credit": "node ./scripts/contributors.js",
@@ -59,6 +59,10 @@
   "devDependencies": {
     "@babel/core": "^7.3.4",
     "@craco/craco": "^3.5.0",
+    "@textile/tslint-rules": "^1.0.3",
+    "@types/node": "^12.0.0",
+    "@types/react": "^16.8.16",
+    "@types/react-dom": "^16.8.4",
     "babel-preset-mobx": "^2.0.0",
     "concurrently": "^4.1.0",
     "cross-env": "^5.2.0",
@@ -68,11 +72,13 @@
     "markdown-magic": "^0.1.25",
     "markdown-magic-github-contributors": "^0.0.3",
     "react-scripts": "2.1.5",
-    "typescript": "^3.3.3333",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5",
     "wait-on": "^3.2.0"
   },
   "build": {
     "appId": "io.textile.photos.desktop",
+    "artifactName": "Photos-${version}.${ext}",
     "compression": "normal",
     "productName": "Photos",
     "files": [

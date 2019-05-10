@@ -1,16 +1,19 @@
 import React, { Component } from 'react'
 import { Icon, List, Header } from 'semantic-ui-react'
+import { Thread } from '@textile/js-http-client'
 import Moment from 'react-moment'
 
-class GroupSummary extends Component {
-  render () {
+class GroupSummary extends Component<{ group: Thread | null }> {
+  render() {
     const { group } = this.props
     if (group === null) {
+      // tslint:disable-next-line:no-null-keyword
       return null
     }
     return (
       <div>
-        <Header as='h3'>{group.name}
+        <Header as='h3' style={{ fontFamily: 'Biotif' }}>
+          {group.name}
           <Header.Subheader>
             <List divided horizontal>
               <List.Item>

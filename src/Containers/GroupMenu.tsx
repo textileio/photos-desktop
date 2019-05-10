@@ -1,11 +1,14 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { List, Icon } from 'semantic-ui-react'
-import { observer, inject } from 'mobx-react'
+import { observer } from 'mobx-react'
+import { Thread } from '@textile/js-http-client'
+import { ConnectedComponent, connect } from '../Components/ConnectedComponent'
+import { Stores } from '../Store'
 
-@inject('store') @observer
-class GroupMenu extends Component {
-  render () {
-    const { store } = this.props
+@connect('store') @observer
+class GroupMenu extends ConnectedComponent<{}, Stores> {
+  render() {
+    const { store } = this.stores
     return (
       <div>
         <List>
@@ -17,17 +20,15 @@ class GroupMenu extends Component {
           </List.Item>
         </List>
         <List selection animated verticalAlign='middle'>
-          {store.groups && store.groups.map((group, index) => this.renderItem(index, group))}
+          {store.groups && store.groups.items.map((group, index) => this.renderItem(index, group))}
         </List>
       </div>
     )
   }
-  renderItem (id, group) {
-    const { store } = this.props
+  renderItem(id: number, group: Thread) {
+    const { store } = this.stores
     return (
-      <List.Item
-        key={id}
-        name={group.id}
+      <List.Item key={group.id} name={group.id}
         onClick={() => { store.currentGroupId = id }}
         active={id === store.currentGroupId}
       >

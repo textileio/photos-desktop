@@ -5,7 +5,7 @@ const url = require('url')
 
 // TODO: Add 'deeplink' option to cookiecutter template
 
-let mainWindow
+let mainWindow // BrowserWindow | null
 
 const gotTheLock = app.requestSingleInstanceLock()
 if (!gotTheLock) {
@@ -57,10 +57,10 @@ const createWindow = () => {
     } = require('electron-devtools-installer')
 
     installExtension(REACT_DEVELOPER_TOOLS)
-      .then(name => {
+      .then((name) => {
         console.log(`Added Extension: ${name}`)
       })
-      .catch(err => {
+      .catch((err) => {
         console.log('An error occurred: ', err)
       })
   }
@@ -80,16 +80,18 @@ const createWindow = () => {
   })
 
   mainWindow.once('ready-to-show', () => {
-    mainWindow.show()
+    if (mainWindow) {
+      mainWindow.show()
+    }
 
-    ipcMain.on('open-external-window', (event, arg) => {
+    ipcMain.on('open-external-window', (_, arg) => {
       shell.openExternal(arg)
     })
   })
 }
 
 const generateMenu = () => {
-  const template = [
+  const template = [ // MenuItemConstructorOptions[]
     {
       label: 'File',
       submenu: [{ role: 'about' }, { role: 'quit' }]
@@ -176,11 +178,13 @@ app.on('activate', () => {
 app.setAsDefaultProtocolClient('textile')
 
 // Protocol handler for osx
-app.on('open-url', function (event, url) {
+app.on('open-url', (event, url) => {
   event.preventDefault()
   console.log(url)
 })
 
-ipcMain.on('load-page', (event, arg) => {
-  mainWindow.loadURL(arg)
+ipcMain.on('load-page', (_, arg) => {
+  if (mainWindow) {
+    mainWindow.loadURL(arg)
+  }
 })

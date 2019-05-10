@@ -1,15 +1,17 @@
-import React, { Component } from 'react'
-import { Modal, Form, Button, Image, TextArea } from 'semantic-ui-react'
+import React, { FormEvent, Component } from 'react'
+import { Modal, Form, Button, Image, TextArea, TextAreaProps, FormProps, ModalProps } from 'semantic-ui-react'
 
-class FileModal extends Component {
+class FileModal extends Component<ModalProps> {
   state = {
     caption: ''
   }
-  handleSubmit = e => {
+  handleSubmit = (event: FormEvent<HTMLFormElement>, data: FormProps) => {
     this.props.onSubmit(this.state.caption)
   }
-  handleChange = (e, { name, value }) => this.setState({ [name]: value })
-  render () {
+  handleChange = (event: FormEvent<HTMLTextAreaElement>, data: TextAreaProps) => {
+    this.setState({ [data.name]: data.value })
+  }
+  render() {
     const { caption } = this.state
     const { preview, open, onClose } = this.props
     return (
