@@ -17,7 +17,7 @@ jobs:
       - run:
           name: compile
           command: |
-            yarn dist --macos --win32 --linux
+            yarn dist --macos --windows --linux
       - run:
           name: collect artifacts
           command: |
