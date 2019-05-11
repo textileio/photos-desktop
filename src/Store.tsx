@@ -245,7 +245,9 @@ export class AppStore implements Store {
   @computed get currentContacts() {
     if (this.contacts && this.currentGroup && this.currentGroupId !== undefined) {
       const id = this.currentGroup.id
-      return this.contacts.items.filter((contact) => contact.threads.includes(id))
+      return this.contacts.items.filter((contact) => {
+        return contact.threads && contact.threads.includes(id)
+      })
     }
     // tslint:disable-next-line:no-null-keyword
     return null
