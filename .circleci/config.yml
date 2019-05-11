@@ -27,7 +27,7 @@ jobs:
             fi
             OUT=~/output
             mkdir -p ${OUT}
-            mv ~/project/Photos-${VERSION}.* ${OUT}/
+            mv ~/project/dist/TextilePhotos-${VERSION}.{dmg,exe,AppImage,pkg,snap} ${OUT}/
       - persist_to_workspace:
           root: ~/
           paths:
@@ -48,14 +48,14 @@ jobs:
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${CIRCLE_TAG} ~/output/
 workflows:
   version: 2
-  desktop:
+  photos-desktop:
     jobs:
       - build:
           filters:
             branches:
               only: master
             tags:
-              only: /.*/
+              only: /^v.*/
       - release:
           requires:
             - build

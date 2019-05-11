@@ -94,15 +94,29 @@ const generateMenu = () => {
   const template = [ // MenuItemConstructorOptions[]
     {
       label: 'File',
-      submenu: [{ role: 'about' }, { role: 'quit' }]
+      submenu: [
+        {
+          role: 'about',
+          label: 'About Textile Photos'
+        },
+        {
+          role: 'quit',
+          label: 'Quit Textile Photos'
+        }
+      ]
     },
     {
       label: 'View',
       submenu: [
-        { role: 'reload' },
-        { role: 'forcereload' },
-        { role: 'toggledevtools' },
-        { type: 'separator' }
+        {
+          role: 'reload'
+        }, {
+          role: 'forcereload'
+        }, {
+          role: 'toggledevtools'
+        }, {
+          type: 'separator'
+        }
       ]
     },
     {
@@ -129,7 +143,14 @@ const generateMenu = () => {
     },
     {
       role: 'window',
-      submenu: [{ role: 'minimize' }, { role: 'close' }]
+      submenu: [
+        {
+          role: 'minimize'
+        },
+        {
+          role: 'close'
+        }
+      ]
     },
     {
       role: 'help',
