@@ -27,7 +27,7 @@ jobs:
             fi
             OUT=~/output
             mkdir -p ${OUT}
-            mv ~/project/Photos-${VERSION}.* ${OUT}/
+            mv ~/project/dist/TextilePhotos-${VERSION}.{dmg,exe,AppImage,pkg,snap} ${OUT}/
       - persist_to_workspace:
           root: ~/
           paths:
