@@ -39,6 +39,7 @@
     "build": "craco build",
     "test": "craco test",
     "credit": "node ./scripts/contributors.js",
+    "lint": "./node_modules/tslint/bin/tslint  -c tslint.json --project .",
     "preversion": "yarn credit",
     "release": "yarn version --patch",
     "postversion": "git push --follow-tags",

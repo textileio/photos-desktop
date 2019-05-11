@@ -11,17 +11,21 @@ jobs:
     steps:
       - checkout
       - run:
-          name: install js deps
+          name: install dependencies
           command: |
             yarn install
       - run:
-          name: compile
+          name: lint sources
+          command: |
+            yarn lint
+      - run:
+          name: build binaries
           command: |
             yarn dist --macos --windows --linux
       - run:
           name: collect artifacts
           command: |
-            VERSION=$(echo $CIRCLE_SHA1 | cut -c -7)
+            VERSION=v$(node -p "require('./package.json').version")
             if [ "${CIRCLE_TAG}" != "" ]; then
                 VERSION=${CIRCLE_TAG}
             fi
@@ -43,7 +47,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - deploy:
-          name: release all
+          name: release binaries
           command: |
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${CIRCLE_TAG} ~/output/
 workflows:
@@ -55,7 +59,7 @@ workflows:
             branches:
               only: master
             tags:
-              only: /^v.*/
+              only: /.*/
       - release:
           requires:
             - build
