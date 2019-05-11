@@ -11,19 +11,19 @@ jobs:
     steps:
       - checkout
       - run:
-          name: install dependencies
+          name: Install Dependencies
           command: |
             yarn install
       - run:
-          name: lint sources
+          name: Lint Sources
           command: |
             yarn lint
       - run:
-          name: build binaries
+          name: Build Installers
           command: |
             yarn dist --macos --windows --linux
       - run:
-          name: collect artifacts
+          name: Collect Artifacts
           command: |
             VERSION=v$(node -p "require('./package.json').version")
             if [ "${CIRCLE_TAG}" != "" ]; then
@@ -47,7 +47,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - deploy:
-          name: release binaries
+          name: Release Installers
           command: |
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${CIRCLE_TAG} ~/output/
 workflows:
