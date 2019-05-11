@@ -1,7 +1,7 @@
 {
   "name": "photos-desktop",
   "version": "0.1.2",
-  "description": "Textile Photos Desktop",
+  "description": "Textile Photos",
   "homepage": "./",
   "main": "public/electron.js",
   "author": "Textile",
@@ -78,9 +78,9 @@
   },
   "build": {
     "appId": "io.textile.photos.desktop",
-    "artifactName": "Photos-v${version}.${ext}",
+    "artifactName": "TextilePhotos-v${version}.${ext}",
     "compression": "normal",
-    "productName": "Photos",
+    "productName": "Textile Photos",
     "files": [
       "build/**/*",
       "node_modules/**/*",
