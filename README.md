@@ -96,7 +96,7 @@ Textile's Photos Desktop app is a work in progress. As such, there's a few thing
 <!-- ⛔️ AUTO-GENERATED-CONTENT:START (CONTRIBUTORS) -->
 | **Commits** | **Contributor** |  
 | --- | --- |  
-| 12 | [carsonfarmer](https://github.com/carsonfarmer) |  
+| 17 | [carsonfarmer](https://github.com/carsonfarmer) |  
 
 <!-- ⛔️ AUTO-GENERATED-CONTENT:END -->
 
