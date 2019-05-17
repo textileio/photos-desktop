@@ -1,21 +1,73 @@
-import React from 'react'
-import { List, Icon } from 'semantic-ui-react'
+import React, { SyntheticEvent } from 'react'
+import { List, Icon, Modal, Form, Button } from 'semantic-ui-react'
 import { observer } from 'mobx-react'
 import { Thread } from '@textile/js-http-client'
 import { ConnectedComponent, connect } from '../Components/ConnectedComponent'
 import { Stores } from '../Store'
 
+interface AddGroupState {
+  name: string
+  modalOpen: boolean
+}
+
 @connect('store') @observer
-class GroupMenu extends ConnectedComponent<{}, Stores> {
+class GroupMenu extends ConnectedComponent<{}, Stores, AddGroupState> {
+  state = {
+    name: '',
+    modalOpen: false
+  }
+  handleNameChange = (_: SyntheticEvent, data: any) => {
+    this.setState({ name: data.value })
+  }
+  handleFormSubmit = () => {
+    const { store }  = this.stores
+    if (this.state.name === '') {
+      return
+    }
+    store.createGroup(this.state.name)
+    this.handleModalClose()
+  }
+  handleModalOpen = () => {
+    this.setState({ modalOpen: true })
+  }
+  handleModalClose = () => {
+    this.setState({
+      modalOpen: false,
+      name: ''
+    })
+  }
   render() {
     const { store } = this.stores
+    const { name } = this.state
     return (
       <div>
         <List>
           <List.Item>
             GROUPS
             <List.Content floated='right'>
-              <Icon disabled name='add' />
+              <Modal
+                open={this.state.modalOpen}
+                size='small'
+                onClose={this.handleModalClose}
+                trigger={<Icon link name='add' onClick={this.handleModalOpen}/>}>
+                <Modal.Header>New Group</Modal.Header>
+                <Modal.Content>
+                  <Form id='form' onSubmit={this.handleFormSubmit}>
+                    <Form.Input
+                      required
+                      placeholder='Add title...'
+                      name='name'
+                      value={name}
+                      onChange={this.handleNameChange}
+                      autoFocus
+                    />
+                  </Form>
+                </Modal.Content>
+                <Modal.Actions>
+                  <Button content='Cancel' type='reset' onClick={this.handleModalClose} />
+                  <Button content='Submit' type='submit' primary form='form'/>
+                </Modal.Actions>
+              </Modal>
             </List.Content>
           </List.Item>
         </List>

@@ -1,8 +1,11 @@
-import React from 'react'
-import { action, computed, observable, intercept, runInAction } from 'mobx'
-import textile, { Peer, ContactList, ThreadList, FeedItem, File, Thread } from '@textile/js-http-client'
+import { action, computed, observable, runInAction } from 'mobx'
+import textile, { Peer, ContactList, ThreadList, FeedItem, File as FileType, Thread } from '@textile/js-http-client'
 import { toast } from 'react-semantic-toasts'
 import { SemanticSIZES, FeedEventProps } from 'semantic-ui-react'
+import uuid from 'uuid/v4'
+import isElectron from 'is-electron'
+import copy from 'copy-to-clipboard'
+const { ipcRenderer } = window
 
 // tslint:disable-next-line:no-empty-interface
 export interface Store { }
@@ -18,6 +21,24 @@ export interface FeedEventList {
   next: string
 }
 
+interface Invite {
+  id: string
+  name?: string
+  key?: string
+  inviter?: string
+  referral?: string
+}
+
+const catchError = (err: Error) => {
+  toast({
+    type: 'error',
+    icon: 'frown outline',
+    title: 'Something went wrong!',
+    description: err.toString(),
+    time: 0
+  })
+}
+
 // Currently a static store that fetches data from peer on init
 export class AppStore implements Store {
   gateway: string = 'http://127.0.0.1:5050'
@@ -29,8 +50,22 @@ export class AppStore implements Store {
   @observable currentItemId?: number
   @observable currentGroupId?: number
   @observable currentFeed?: FeedEventList
+  @observable invite?: Invite
   constructor() {
-    textile.subscribe.stream().then(async (stream) => {
+    setInterval(async () => {
+      const invites = await textile.invites.list()
+      // Only process the most recent invite each time
+      if (invites.items.length > 0 && this.invite === undefined) {
+        runInAction(() => {
+          const invite = invites.items[0]
+          this.invite = {
+            ...invite, inviter: invite.inviter.name || invite.inviter.address.slice(0, 8)
+          }
+        })
+      }
+    }, 10000)
+    textile.subscribe.stream()
+    .then((stream) => {
       const reader = stream.getReader()
       const read = (result: ReadableStreamReadResult<FeedItem>) => {
         if (result.done) {
@@ -39,7 +74,7 @@ export class AppStore implements Store {
         try {
           this.fetchGroups()
           this.fetchContacts()
-          if (this.currentGroupId === undefined && this.currentGroupId === null) {
+          if (this.currentGroupId !== undefined && this.currentGroupId !== null) {
             this.fetchGroupData(this.currentGroupId)
           }
         } catch (err) {
@@ -50,41 +85,30 @@ export class AppStore implements Store {
       }
       reader.read().then(read)
     })
-  }
-  @action async fetchProfile() {
-    try {
-      const profile = await textile.profile.get()
-      profile.name = profile.name || profile.address.slice(-8)
-      // if (profile.avatar) {
-      //   profile.avatar = `${this.gateway}/ipfs/${profile.avatar}/0/small/d`
-      // }
-      runInAction(() => {
-        this.profile = profile
-        this.online = true
-      })
-    } catch (err) {
-      toast({
-        icon: 'power cord',
-        title: 'Offline?',
-        description: `Looks like your Textile peer is offline 😔...`,
-        time: 0
+    if (isElectron()) {
+      // Only handle deep link invites from within electron
+      ipcRenderer.on('invite', (_: any, invite: Invite) => {
+        runInAction(() => {
+          this.invite = invite
+        })
       })
     }
   }
+  // Group actions
   @action async createGroup(name: string) {
     try {
       if (this.online) {
         // TODO: We can't assume the 'media' thread will be available
-        const schema = 'QmeVa8vUbyjHaYaeki8RZRshsn3JeYGi8QCnLCWXh6euEh'
-        await textile.threads.add(name, schema, 'photos_' + Math.random(), 'open', 'shared')
+        const schema = (await textile.schemas.defaults()).media
+        const key = `textile_photos-shared-${uuid()}`
+        await textile.threads.add(name, schema, key, 'open', 'shared')
         await this.fetchGroups()
         runInAction(() => {
           this.currentGroupId = this.groups ? this.groups.items.length - 1 : 0
         })
       }
     } catch (err) {
-      // tslint:disable-next-line:no-console
-      console.log(err)
+      catchError(err)
     }
   }
   @action async fetchGroups() {
@@ -102,8 +126,86 @@ export class AppStore implements Store {
         })
       }
     } catch (err) {
-      // tslint:disable-next-line:no-console
-      console.log(err)
+      catchError(err)
+    }
+  }
+  @action async leaveGroup(groupId: string) {
+    try {
+      await textile.threads.remove(groupId)
+      runInAction(() => {
+        this.currentGroupId = undefined
+      })
+      this.fetchGroups()
+    } catch (err) {
+      catchError(err)
+    }
+  }
+  @action async joinGroup(invite: Invite, reject?: boolean) {
+    try {
+      if (reject) {
+        await textile.invites.ignore(invite.id)
+      } else {
+        await textile.invites.accept(invite.id, invite.key)
+      }
+      runInAction(() => {
+        this.invite = undefined
+      })
+      toast({
+        icon: 'smile outline',
+        title: 'Success',
+        description: `${reject ? 'ignored' : 'joined'} group '${invite.name || 'unknown group'}'`,
+        time: 3000
+      })
+    } catch (err) {
+      catchError(err)
+    }
+  }
+  async addInvite(groupId: string, address?: string) {
+    try {
+      if (!address) {
+        const invite = await textile.invites.addExternal(groupId)
+        if (this.currentGroup) {
+          const name = this.currentGroup.name
+          const hash: string[] = []
+          hash.push(`id=${encodeURIComponent(invite.id)}`)
+          hash.push(`key=${encodeURIComponent(invite.key)}`)
+          hash.push(`inviter=${encodeURIComponent(invite.inviter)}`)
+          hash.push(`name=${encodeURIComponent(name)}`)
+          hash.push(`name=${encodeURIComponent('MCSES')}`)
+          copy(`https://www.textile.photos/invites/new#${hash.join('&')}`)
+          toast({
+            icon: 'smile outline',
+            title: 'Invite link',
+            description: 'Copied link to clipboard!',
+            time: 3000
+          })
+        }
+      } else {
+        await textile.invites.add(groupId, address)
+      }
+    } catch (err) {
+      catchError(err)
+    }
+  }
+  @action async fetchProfile() {
+    try {
+      const profile = await textile.profile.get()
+      profile.name = profile.name || profile.address.slice(-8)
+      // if (profile.avatar) {
+      //   profile.avatar = `${this.gateway}/ipfs/${profile.avatar}/0/small/d`
+      // }
+      runInAction(() => {
+        this.profile = profile
+        this.online = true
+      })
+    } catch (err) {
+      toast({
+        type: 'warning',
+        icon: 'power cord',
+        title: 'Offline?',
+        description: `Looks like your Textile peer is offline 😔...`,
+        time: 0
+      })
     }
   }
   @action async fetchContacts() {
@@ -115,8 +217,7 @@ export class AppStore implements Store {
         })
       }
     } catch (err) {
-      // tslint:disable-next-line:no-console
-      console.log(err)
+      catchError(err)
     }
   }
   @action async addLike(id: string) {
@@ -125,8 +226,7 @@ export class AppStore implements Store {
         await textile.likes.add(id)
       }
     } catch (err) {
-      // tslint:disable-next-line:no-console
-      console.log(err)
+      catchError(err)
     }
   }
   @action async addComment(id: string, message: string) {
@@ -135,8 +235,7 @@ export class AppStore implements Store {
         await textile.comments.add(id, message)
       }
     } catch (err) {
-      // tslint:disable-next-line:no-console
-      console.log(err)
+      catchError(err)
     }
   }
   @action async addMessage(thread: string, message: string) {
@@ -145,20 +244,16 @@ export class AppStore implements Store {
         await textile.messages.add(thread, message)
       }
     } catch (err) {
-      // tslint:disable-next-line:no-console
-      console.log(err)
+      catchError(err)
     }
   }
-  @action async addFile(thread: string, file: any, message: string) {
+  @action async addFile(thread: string, file: File, message: string) {
     try {
       if (this.online) {
-        // tslint:disable-next-line:no-console
-        console.log(file, thread, message)
         await textile.files.add(file, message, thread)
       }
     } catch (err) {
-      // tslint:disable-next-line:no-console
-      console.log(err)
+      catchError(err)
     }
   }
   @action async fetchGroupData(id: number, limit?: number) {
@@ -181,7 +276,7 @@ export class AppStore implements Store {
               case '/Files':
                 feedItem.summary = `added a photo`
                 feedItem.extraText = payload.caption
-                feedItem.extraImages = payload.files.map((file: File) => {
+                feedItem.extraImages = payload.files.map((file: FileType) => {
                   const image = file.links.large ? file.links.large : file.links.raw
                   // We use file hash directly here because we need the key anyway
                   const base = `${this.gateway}/ipfs/${image.hash}`
@@ -221,8 +316,7 @@ export class AppStore implements Store {
         this.currentFeed = { items, count: feed.count, next: feed.next }
       }
     } catch (err) {
-      // tslint:disable-next-line:no-console
-      console.log(err)
+      catchError(err)
     }
     return true
   }
