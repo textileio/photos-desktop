@@ -48,7 +48,7 @@ class Main extends ConnectedComponent<{}, Stores> {
               <Grid.Row>
                 <Grid.Column width={3}>
                   <Feed.Label style={{ maxWidth: 'calc(100%)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {store.profile && <Image avatar src={`${store.gateway}/ipfs/${store.profile.avatar}/0/small/d`} />}
+                    {store.profile && <Image avatar src={`${store.gateway}/ipfs/${store.profile.avatar}/0/small/content`} />}
                     <span
                       title='click to copy node address'
                       onClick={() => { copy(store.profile ? store.profile.address : '') }}

@@ -83,7 +83,7 @@ class GroupSummary extends ConnectedComponent<{}, Stores, GroupState> {
         value: item.address,
         image: {
           avatar: true,
-          src: item.avatar ? `${store.gateway}/ipfs/${item.avatar}/0/small/d` : DEFAULT_AVATAR
+          src: item.avatar ? `${store.gateway}/ipfs/${item.avatar}/0/small/content` : DEFAULT_AVATAR
         }
       }
     }) : []

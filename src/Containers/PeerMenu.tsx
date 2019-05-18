@@ -38,7 +38,7 @@ class PeerMenu extends ConnectedComponent<{}, Stores> {
         style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
       >
         <Image avatar style={{ width: '1em', height: '1em' }}
-          src={peer.avatar ? `${store.gateway}/ipfs/${peer.avatar}/0/small/d` : DEFAULT_AVATAR} />
+          src={peer.avatar ? `${store.gateway}/ipfs/${peer.avatar}/0/small/content` : DEFAULT_AVATAR} />
         <List.Content>
           {peer.name || peer.address.slice(-8)}
         </List.Content>

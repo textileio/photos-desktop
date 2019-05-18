@@ -26,7 +26,7 @@ class FeedItem extends Component<FeedItemProps> {
         <Feed.Label>
           {item.user &&
             <LazyImage avatar
-              src={item.user.avatar ? `${GATEWAY}/ipfs/${item.user.avatar}/0/small/d` : squareImage}
+              src={item.user.avatar ? `${GATEWAY}/ipfs/${item.user.avatar}/0/small/content` : squareImage}
             />}
         </Feed.Label>
         <Feed.Content>
