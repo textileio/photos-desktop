@@ -14,6 +14,7 @@ export interface FeedEvent extends FeedEventProps {
   next?: string
   count?: number
   user?: Peer
+  removable?: boolean
 }
 export interface FeedEventList {
   items: FeedEvent
@@ -220,6 +221,15 @@ export class AppStore implements Store {
       catchError(err)
     }
   }
+  @action async ignoreItem(id: string) {
+    try {
+      if (this.online) {
+        await textile.blocks.remove(id)
+      }
+    } catch (err) {
+      catchError(err)
+    }
+  }
   @action async addLike(id: string) {
     try {
       if (this.online) {
@@ -270,7 +280,10 @@ export class AppStore implements Store {
               user: payload ? payload.user : undefined,
               id: item.block,
               comments: payload && payload.comments || [],
-              likes: payload && payload.likes || []
+              likes: payload && payload.likes || [],
+            }
+            if (feedItem.user && this.profile) {
+              feedItem.removable = feedItem.user.address === this.profile.address
             }
             switch (type) {
               case '/Files':
@@ -290,11 +303,13 @@ export class AppStore implements Store {
                 feedItem.summary = `joined the '${group.name}' group`
                 feedItem.comments = undefined
                 feedItem.likes = undefined
+                feedItem.removable = false
                 break
               case '/Leave':
                 feedItem.summary = `left the '${group.name}' group`
                 feedItem.comments = undefined
                 feedItem.likes = undefined
+                feedItem.removable = false
                 break
               case '/Comment':
               case '/Like':
@@ -310,6 +325,7 @@ export class AppStore implements Store {
                 feedItem.summary = `updated the '${group.name}' group`
                 feedItem.comments = undefined
                 feedItem.likes = undefined
+                feedItem.removable = false
             }
             return feedItem
           })

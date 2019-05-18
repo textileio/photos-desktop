@@ -1,7 +1,7 @@
 import React, { SyntheticEvent } from 'react'
 import { Icon, List, Header, Confirm, Button, Dropdown, Modal } from 'semantic-ui-react'
 import Moment from 'react-moment'
-import { ConnectedComponent, connect } from './ConnectedComponent'
+import { ConnectedComponent, connect } from '../Components/ConnectedComponent'
 import { Stores } from '../Store'
 import { observer } from 'mobx-react'
 import { toast } from 'react-semantic-toasts'
