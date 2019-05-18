@@ -63,6 +63,7 @@
   "devDependencies": {
     "@babel/core": "^7.3.4",
     "@craco/craco": "^3.5.0",
+    "@ef-carbon/url": "^2.4.3",
     "@textile/tslint-rules": "^1.0.3",
     "@types/node": "^12.0.0",
     "@types/react": "^16.8.16",
