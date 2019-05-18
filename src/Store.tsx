@@ -192,7 +192,7 @@ export class AppStore implements Store {
       const profile = await textile.profile.get()
       profile.name = profile.name || profile.address.slice(-8)
       // if (profile.avatar) {
-      //   profile.avatar = `${this.gateway}/ipfs/${profile.avatar}/0/small/d`
+      //   profile.avatar = `${this.gateway}/ipfs/${profile.avatar}/0/small/content`
       // }
       runInAction(() => {
         this.profile = profile
