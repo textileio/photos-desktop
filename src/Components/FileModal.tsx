@@ -5,10 +5,10 @@ class FileModal extends Component<ModalProps> {
   state = {
     caption: ''
   }
-  handleSubmit = (event: FormEvent<HTMLFormElement>, data: FormProps) => {
+  handleSubmit = () => {
     this.props.onSubmit(this.state.caption)
   }
-  handleChange = (event: FormEvent<HTMLTextAreaElement>, data: TextAreaProps) => {
+  handleChange = (_: FormEvent<HTMLTextAreaElement>, data: TextAreaProps) => {
     this.setState({ [data.name]: data.value })
   }
   render() {

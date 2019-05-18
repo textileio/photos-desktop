@@ -2,10 +2,12 @@ const { app, BrowserWindow, shell, ipcMain, Menu } = require('electron')
 const path = require('path')
 const isDev = require('electron-is-dev')
 const url = require('url')
+const queryString = require('query-string')
 
 // TODO: Add 'deeplink' option to cookiecutter template
 
 let mainWindow // BrowserWindow | null
+let invite
 
 const gotTheLock = app.requestSingleInstanceLock()
 if (!gotTheLock) {
@@ -37,8 +39,8 @@ const createWindow = () => {
     show: false,
     // titleBarStyle: 'hidden',
     webPreferences: {
-      nodeIntegration: false
-      // preload: path.join(__dirname, '/preload.js')
+      nodeIntegration: false,
+      preload: path.join(__dirname, '../build', '/preload.js')
     },
     height: 500,
     width: 800
@@ -68,7 +70,7 @@ const createWindow = () => {
   // Protocol handler for windows
   if (process.platform === 'win32') {
     // Keep only command line / deep linked arguments
-    console.log(process.argv.slice(1))
+    handleLink(process.argv.slice(1))
   }
 
   // Emitted when the window is closed.
@@ -82,6 +84,9 @@ const createWindow = () => {
   mainWindow.once('ready-to-show', () => {
     if (mainWindow) {
       mainWindow.show()
+      if (invite) {
+        mainWindow.webContents.send('invite', invite)
+      }
     }
 
     ipcMain.on('open-external-window', (_, arg) => {
@@ -195,13 +200,21 @@ app.on('activate', () => {
   }
 })
 
+const handleLink = (link) => {
+  const parsed = url.parse(link)
+  if (parsed.hostname !== 'textile.photos' && parsed.path !== '/invites/new') {
+    return
+  }
+  invite = queryString.parse(parsed.hash.slice(1))
+}
+
 // Define custom protocol handler. Deep linking works on packaged versions of the application!
 app.setAsDefaultProtocolClient('textile')
 
 // Protocol handler for osx
 app.on('open-url', (event, url) => {
   event.preventDefault()
-  console.log(url)
+  handleLink(url)
 })
 
 ipcMain.on('load-page', (_, arg) => {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Sidebar, Segment } from 'semantic-ui-react'
+import { Sidebar, Segment, Button, Icon } from 'semantic-ui-react'
 import CommentsList from './CommentsList'
 import { observer } from 'mobx-react'
 import { ConnectedComponent, connect } from '../Components/ConnectedComponent'
@@ -16,12 +16,14 @@ class InfoSidebar extends ConnectedComponent<{}, Stores> {
       <Sidebar
         as={Segment}
         animation='overlay'
-        icon='labeled'
         width='wide'
         direction='right'
         onHide={this.handleSidebarHide}
         visible={store.currentItemId !== undefined}
       >
+        <div style={{ width: '100%', textAlign: 'right' }}>
+          <Icon link name='close' onClick={this.handleSidebarHide} />
+        </div>
         <CommentsList />
       </Sidebar>
     )

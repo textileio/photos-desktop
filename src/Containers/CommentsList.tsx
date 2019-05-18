@@ -1,6 +1,5 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-// import { Comment as FeedComment } from '@textile/js-http-client'
 import { Comment, Header } from 'semantic-ui-react'
 import OmniForm, { OmniFormState } from '../Components/OmniForm'
 import Moment from 'react-moment'
