@@ -280,7 +280,7 @@ export class AppStore implements Store {
               user: payload ? payload.user : undefined,
               id: item.block,
               comments: payload && payload.comments || [],
-              likes: payload && payload.likes || [],
+              likes: payload && payload.likes || []
             }
             if (feedItem.user && this.profile) {
               feedItem.removable = feedItem.user.address === this.profile.address
