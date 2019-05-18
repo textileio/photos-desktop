@@ -33,7 +33,7 @@ class CommentsList extends ConnectedComponent<{}, Stores> {
   renderItem(item: any) {
     return <Comment key={item.id}>
         <Comment.Avatar src={item.user.avatar ?
-          `${this.stores.store.gateway}/ipfs/${item.user.avatar}/0/small/d` :
+          `${this.stores.store.gateway}/ipfs/${item.user.avatar}/0/small/content` :
           squareImage
         } />
         <Comment.Content>

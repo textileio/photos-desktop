@@ -35,6 +35,7 @@
   },
   "scripts": {
     "start": "craco start",
+    "predev": "yarn build",
     "dev": "concurrently \"cross-env BROWSER=none yarn craco start\" \"wait-on http://localhost:3000 && electron .\"",
     "pack": "electron-builder --dir",
     "predist": "yarn build",

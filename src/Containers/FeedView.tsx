@@ -1,5 +1,5 @@
 import React, { createRef, SyntheticEvent } from 'react'
-import { Feed, Segment, Message, Modal, Visibility, Ref, Icon, VisibilityEventData } from 'semantic-ui-react'
+import { Feed, Segment, Message, Modal, Ref, Icon } from 'semantic-ui-react'
 import LazyImage from '../Components/LazyImage'
 import FeedItem from '../Components/FeedItem'
 import { observer } from 'mobx-react'
@@ -71,10 +71,7 @@ class FeedView extends ConnectedComponent<{}, Stores, FeedViewState> {
                         key={item.id}
                         index={index}
                         item={item}
-                        imageSize={store.imageSize}
                         onImageClick={this.handleModalOpen}
-                        onCommentsClick={(id) => { store.currentItemId = id }}
-                        onLikesClick={(item) => { store.addLike(item.id) }}
                       />
                     })}
                 </Feed>
