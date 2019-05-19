@@ -52,6 +52,7 @@ export class AppStore implements Store {
   @observable currentGroupId?: number
   @observable currentFeed?: FeedEventList
   @observable invite?: Invite
+  @observable openInviteModal: boolean = false
   constructor() {
     setInterval(async () => {
       const invites = await textile.invites.list()
@@ -201,7 +202,7 @@ export class AppStore implements Store {
       })
     } catch (err) {
       toast({
-        type: 'warning',
+        type: 'error',
         icon: 'power cord',
         title: 'Offline?',
         description: `Looks like your Textile peer is offline 😔...`,

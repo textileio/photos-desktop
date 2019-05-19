@@ -9,6 +9,9 @@ const DEFAULT_AVATAR = 'https://react.semantic-ui.com/images/wireframe/square-im
 
 @connect('store') @observer
 class PeerMenu extends ConnectedComponent<{}, Stores> {
+  handleInviteClick = () => {
+    this.stores.store.openInviteModal = true
+  }
   render() {
     const { store } = this.stores
     if (store.currentContacts) {
@@ -18,7 +21,7 @@ class PeerMenu extends ConnectedComponent<{}, Stores> {
             <List.Item>
               PEERS
               <List.Content floated='right'>
-                <Icon disabled name='add' />
+                <Icon name='add' onClick={this.handleInviteClick}/>
               </List.Content>
             </List.Item>
           </List>

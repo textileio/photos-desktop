@@ -10,7 +10,7 @@ const DEFAULT_AVATAR = 'https://react.semantic-ui.com/images/wireframe/square-im
 
 interface GroupState {
   leaveOpen: boolean
-  inviteOpen: boolean
+  // inviteOpen: boolean
   addresses: string[]
 }
 
@@ -18,17 +18,20 @@ interface GroupState {
 class GroupSummary extends ConnectedComponent<{}, Stores, GroupState> {
   state = {
     leaveOpen: false,
-    inviteOpen: false,
+    // inviteOpen: false,
     addresses: []
   }
   handleLeaveOpen = () => {
     this.setState({ leaveOpen: true })
   }
   handleInviteOpen = () => {
-    this.setState({ inviteOpen: true })
+    // this.setState({ inviteOpen: true })
+    this.stores.store.openInviteModal = true
   }
   handleInviteClose = () => {
-    this.setState({ inviteOpen: false, addresses: [] })
+    // this.setState({ inviteOpen: false, addresses: [] })
+    this.stores.store.openInviteModal = false
+    this.setState({ addresses: [] })
   }
   handleLeaveCancel = () => {
     this.setState({ leaveOpen: false })
@@ -116,8 +119,10 @@ class GroupSummary extends ConnectedComponent<{}, Stores, GroupState> {
                   <Dropdown.Menu>
                     <Modal closeIcon size='small' trigger={
                       <Dropdown.Item icon='share square' text='Invite' onClick={this.handleInviteOpen} />
-                    }
-                    open={this.state.inviteOpen}>
+                      }
+                      open={store.openInviteModal}
+                      onClose={this.handleInviteClose}
+                    >
                     <Modal.Header>
                       Invite contacts
                     </Modal.Header>
