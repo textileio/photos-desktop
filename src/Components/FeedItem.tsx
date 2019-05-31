@@ -1,11 +1,13 @@
 import React, { SyntheticEvent } from 'react'
-import { Feed, Icon } from 'semantic-ui-react'
+import { Feed, Icon, Button } from 'semantic-ui-react'
 import Moment from 'react-moment'
 import { observer } from 'mobx-react'
 import LazyImage from './LazyImage'
 import * as squareImage from '../Assets/square-image.png'
 import { ConnectedComponent, connect } from '../Components/ConnectedComponent'
 import { Stores, FeedEvent } from '../Store'
+import copy from 'copy-to-clipboard'
+import URL from 'url-parse'
 
 export interface FeedItemProps {
   index: number
@@ -22,9 +24,14 @@ class FeedItem extends ConnectedComponent<FeedItemProps, Stores, FeedItemState> 
   state = {
     isHovering: false
   }
-  handleMouseHover = () => {
+  handleMouseEnter = () => {
     this.setState({
-      isHovering: !this.state.isHovering
+      isHovering: true
+    })
+  }
+  handleMouseLeave = () => {
+    this.setState({
+      isHovering: false
     })
   }
   onCommentsClick = (id: number) => {
@@ -36,6 +43,15 @@ class FeedItem extends ConnectedComponent<FeedItemProps, Stores, FeedItemState> 
   onIgnoreClick = (item: FeedEvent) => {
     this.stores.store.ignoreItem(item.id)
   }
+  onCopyLink = (item: FeedEvent) => {
+    if (item.extraImages) {
+      const url = new URL((item.extraImages as string[])[0])
+      url.set('hostname', 'gateway.textile.cafe')
+      url.set('port', undefined)
+      url.set('protocol', 'https')
+      copy(url.toString())
+    }
+  }
   render() {
     const { index, item, onImageClick } = this.props
     const commented = item.comments && item.comments.length > 0
@@ -43,8 +59,8 @@ class FeedItem extends ConnectedComponent<FeedItemProps, Stores, FeedItemState> 
     const { store } = this.stores
     return (
       <Feed.Event
-        onMouseEnter={this.handleMouseHover}
-        onMouseLeave={this.handleMouseHover}
+        onMouseEnter={this.handleMouseEnter}
+        onMouseLeave={this.handleMouseLeave}
         id={item.id} style={{ flex: '0 0 auto' }}>
         <Feed.Label>
           {item.user &&
@@ -63,6 +79,36 @@ class FeedItem extends ConnectedComponent<FeedItemProps, Stores, FeedItemState> 
               <Feed.Date>
                 <Moment fromNow>{item.date}</Moment>
               </Feed.Date>
+            {isHovering &&
+            <Feed.Like>
+              <Button.Group compact basic floated='right'>
+                {item.likes !== undefined &&
+                  <Button icon={{ name: 'heart outline' }}
+                    onClick={() => this.onLikesClick(item)}
+                    title='Like item'
+                  />
+                }
+                {item.comments !== undefined &&
+                  <Button icon={{ name: 'comment outline' }}
+                    onClick={() => this.onCommentsClick(index)}
+                    title='Comment on item'
+                  />
+                }
+                {item.extraImages &&
+                  <Button icon={{ name: 'linkify' }}
+                    onClick={() => this.onCopyLink(item)}
+                    title='Copy link'
+                  />
+                }
+                {item.removable &&
+                  <Button icon={{ name: 'delete' }}
+                    onClick={() => this.onIgnoreClick(item)}
+                    title='Remove item'
+                  />
+                }
+              </Button.Group>
+            </Feed.Like>
+            }
           </Feed.Summary>
           {item.extraText &&
             <Feed.Extra text>{item.extraText}</Feed.Extra>
@@ -89,11 +135,6 @@ class FeedItem extends ConnectedComponent<FeedItemProps, Stores, FeedItemState> 
               />
               {item.comments.length > 0 && item.comments.length}
             </Feed.Like>
-            }
-            {isHovering && item.removable &&
-              <Feed.Like onClick={() => this.onIgnoreClick(item)}>
-                <Icon name='delete' color='grey' title='Remove item'/>
-              </Feed.Like>
             }
           </Feed.Meta>
         </Feed.Content>
