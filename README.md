@@ -47,7 +47,7 @@ Textile photos is _censorship resistant_ because it is built on decentralized pr
 
 ## Use it
 
-You can grab a [Photos Desktop release](https://github.com/textileio/photos-desktop/releases) from our GitHub repo. From there, you can grab one of our installers and install the app on your machine. It requires the Textile tray app to be running (for now), which you can grab from our [Textile Go](https://github.com/textileio/go-textile/releases) repo.
+You can grab a [Photos Desktop release](https://github.com/textileio/photos-desktop/releases) from our GitHub repo. From there, you can grab one of our installers and install the app on your machine. It requires the Textile tray app to be running (for now), which you can grab from our [Textile Desktop releases](https://github.com/textileio/desktop/releases/latest).
 
 ## Develop
 
