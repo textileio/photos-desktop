@@ -1,5 +1,5 @@
 import { action, computed, observable, runInAction } from 'mobx'
-import textile, { Peer, ContactList, ThreadList, FeedItem, File as FileType, Thread } from '@textile/js-http-client'
+import textile, { Peer, ContactList, ThreadList, FeedItem, File as FileType, Thread, Contact } from '@textile/js-http-client'
 import { toast } from 'react-semantic-toasts'
 import { SemanticSIZES, FeedEventProps } from 'semantic-ui-react'
 import uuid from 'uuid/v4'
@@ -43,7 +43,7 @@ const catchError = (err: Error) => {
 // Currently a static store that fetches data from peer on init
 export class AppStore implements Store {
   gateway: string = 'http://127.0.0.1:5050'
-  @observable profile?: Peer
+  @observable profile?: Contact
   @observable imageSize: SemanticSIZES = 'large'
   @observable contacts?: ContactList
   @observable online: boolean = false
@@ -191,7 +191,7 @@ export class AppStore implements Store {
   }
   @action async fetchProfile() {
     try {
-      const profile = await textile.profile.get()
+      const profile = await textile.account.contact()
       profile.name = profile.name || profile.address.slice(-8)
       // if (profile.avatar) {
       //   profile.avatar = `${this.gateway}/ipfs/${profile.avatar}/0/small/content`
