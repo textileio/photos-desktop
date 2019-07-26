@@ -193,9 +193,6 @@ export class AppStore implements Store {
     try {
       const profile = await textile.account.contact()
       profile.name = profile.name || profile.address.slice(-8)
-      // if (profile.avatar) {
-      //   profile.avatar = `${this.gateway}/ipfs/${profile.avatar}/0/small/content`
-      // }
       runInAction(() => {
         this.profile = profile
         this.online = true
