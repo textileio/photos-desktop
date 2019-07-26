@@ -66,7 +66,7 @@ export class AppStore implements Store {
         })
       }
     }, 10000)
-    textile.subscribe.stream()
+    textile.observe.events()
     .then((stream) => {
       const reader = stream.getReader()
       const read = (result: ReadableStreamReadResult<FeedItem>) => {
@@ -225,7 +225,7 @@ export class AppStore implements Store {
   @action async ignoreItem(id: string) {
     try {
       if (this.online) {
-        await textile.blocks.remove(id)
+        await textile.blocks.ignore(id)
       }
     } catch (err) {
       catchError(err)
