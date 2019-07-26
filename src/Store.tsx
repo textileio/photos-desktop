@@ -66,7 +66,7 @@ export class AppStore implements Store {
         })
       }
     }, 10000)
-    textile.subscribe.stream()
+    textile.observe.events()
     .then((stream) => {
       const reader = stream.getReader()
       const read = (result: ReadableStreamReadResult<FeedItem>) => {
@@ -193,9 +193,6 @@ export class AppStore implements Store {
     try {
       const profile = await textile.account.contact()
       profile.name = profile.name || profile.address.slice(-8)
-      // if (profile.avatar) {
-      //   profile.avatar = `${this.gateway}/ipfs/${profile.avatar}/0/small/content`
-      // }
       runInAction(() => {
         this.profile = profile
         this.online = true
@@ -225,7 +222,7 @@ export class AppStore implements Store {
   @action async ignoreItem(id: string) {
     try {
       if (this.online) {
-        await textile.blocks.remove(id)
+        await textile.blocks.ignore(id)
       }
     } catch (err) {
       catchError(err)

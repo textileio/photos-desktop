@@ -56,15 +56,13 @@ workflows:
     jobs:
       - build:
           filters:
-            branches:
-              only: master
             tags:
-              only: /.*/
+              only: /^v.*/
       - release:
           requires:
             - build
           filters:
-            branches:
-              ignore: /.*/
             tags:
               only: /^v.*/
+            branches:
+              ignore: /.*/
