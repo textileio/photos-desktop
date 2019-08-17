@@ -1,33 +1,31 @@
 {
+  "extends": "./node_modules/electron-webpack/tsconfig-base.json",
   "compilerOptions": {
     "target": "es6",
-    "jsx": "preserve",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "module": "esnext",
+    "lib": ["es6", "dom", "esnext"],
+    "module": "commonjs",
     "moduleResolution": "node",
-    "allowJs": true,
+    "declaration": true,
+    "allowJs": false,
+    "jsx": "react",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
     "esModuleInterop": true,
     "strict": true,
     "outDir": "dist",
-    "experimentalDecorators": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "noEmit": true
+    "baseUrl": ".",
   },
   "include": [
-    "public/electron.ts",
-    "src/**/*"
+    "src/**/*",
+    "src/node_modules"
   ],
   "exclude": [
+    "scripts",
     "node_modules",
-    "dist"
+    "docs",
+    "dist",
+    "**/__test__",
   ],
   "compileOnSave": true
 }

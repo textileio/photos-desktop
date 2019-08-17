@@ -1,79 +1,90 @@
-# Photos Desktop _(photos-desktop)_
+# Textile Wallet in Javascript _(js-textile-wallet)_
 
 [![Made by Textile](https://img.shields.io/badge/made%20by-Textile-informational.svg?style=popout-square)](https://textile.io)
 [![Chat on Slack](https://img.shields.io/badge/slack-slack.textile.io-informational.svg?style=popout-square)](https://slack.textile.io)
-[![Keywords](https://img.shields.io/github/package-json/keywords/textileio/photos-desktop.svg?style=popout-square)](./package.json)
+[![Keywords](https://img.shields.io/github/package-json/keywords/textileio/js-textile-wallet.svg?style=popout-square)](./package.json)
 
-[![GitHub package.json version](https://img.shields.io/github/package-json/v/textileio/photos-desktop.svg?style=popout-square)](./package.json)
-[![GitHub license](https://img.shields.io/github/license/textileio/photos-desktop.svg?style=popout-square)](./LICENSE)
-[![David](https://img.shields.io/david/dev/textileio/photos-desktop.svg)](https://david-dm.org/textileio/photos-desktop)
-[![CircleCI branch](https://img.shields.io/circleci/project/github/textileio/photos-desktop/master.svg?style=popout-square)](https://circleci.com/gh/textileio/photos-desktop)
+[![GitHub package.json version](https://img.shields.io/github/package-json/v/textileio/js-textile-wallet.svg?style=popout-square)](./package.json)
+[![npm (scoped)](https://img.shields.io/npm/v/@textile/wallet.svg?style=popout-square)](https://www.npmjs.com/package/@textile/wallet)
+[![node (scoped)](https://img.shields.io/node/v/@textile/wallet.svg?style=popout-square)](https://www.npmjs.com/package/@textile/wallet)
+[![GitHub license](https://img.shields.io/github/license/textileio/js-textile-wallet.svg?style=popout-square)](./LICENSE)
+[![David](https://img.shields.io/david/dev/textileio/js-textile-wallet.svg)](https://david-dm.org/textileio/js-textile-wallet)
+[![CircleCI branch](https://img.shields.io/circleci/project/github/textileio/js-textile-wallet/master.svg?style=popout-square)](https://circleci.com/gh/textileio/js-textile-wallet)
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=popout-square)](https://github.com/RichardLitt/standard-readme)
+[![docs](https://img.shields.io/badge/docs-master-success.svg?style=popout-square)](https://textileio.github.io/js-textile-wallet/)
 
-> Textile Photos... for desktop!
+> Official Textile data wallet implemented in Javascript
 
-Join us on our [public Slack channel](https://slack.textile.io/) for news, discussions, and status updates. For current status, and where you can help, please see [issue #1](https://github.com/textileio/js-http-client/issues/1).
+Join us on our [public Slack channel](https://slack.textile.io/) for news, discussions, and status updates.
 
 ## Table of Contents
 
-<!-- AUTO-GENERATED-CONTENT:START (TOC) -->
 - [Background](#background)
-- [Textile Photos](#textile-photos)
-- [Use it](#use-it)
-- [Develop](#develop)
-  * [Get started](#get-started)
-  * [`yarn start`](#yarn-start)
-  * [`yarn dev`](#yarn-dev)
-  * [`yarn dist`](#yarn-dist)
+- [Development](#development)
+- [Browser](#browser)
+- [Documentation](#documentation)
 - [Maintainer](#maintainer)
 - [Contributing](#contributing)
-- [Contributors](#contributors)
 - [License](#license)
-<!-- AUTO-GENERATED-CONTENT:END -->
 
 ## Background
 
 [Textile](https://www.textile.io) provides encrypted, recoverable, schema-based, and cross-application data storage built on [IPFS](https://github.com/ipfs) and [libp2p](https://github.com/libp2p). We like to think of it as a decentralized data wallet with built-in protocols for sharing and recovery, or more simply, **an open and programmable iCloud**.
 
-## Textile Photos
+A Textile 'wallet' is a core component of the Textile system. A wallet is represented by mnemonic phrase, and in practice is a [BIP32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki) Hierarchical [Deterministic Wallet](https://en.bitcoin.it/wiki/Deterministic_wallet) based on Stellar's implementation of [SLIP-0010](https://github.com/satoshilabs/slips/blob/master/slip-0010.md). You can learn more about BIP39 mnemonics and more in this really nice [interactive webpage](https://iancoleman.io/bip39/).
 
-[Textile Photos](https://www.textile.photos/) is a mobile, encrypted, secure, decentralized personal data wallet for your photos. It allows you to do things like:
+You can think of a wallet as a master key, and the account represents keys specific to a given application or use-case. Every account seed "inside" the wallet can be derived from the wallet's mnemonic phrase. Meaning that the wallet effectively _is_ the mnemonic phrase. Any given wallet may create an arbitrary number of accounts. For example, a single wallet can be used to provision multiple Textile Photos "accounts", each with a completely different persona. This provides a powerful partitioning framework.
 
-* Organize your photos across your devices or back them up remotely
-* Publish your photos to friends, family, or your favorite communities
-* Store your data in a decentralized system designed to last forever
+Textile account seeds (private keys) always starts with an "S" for "secret" and account addresses (public keys) always start with a "P" for "public". See https://docs.textile.io/concepts/the-wallet/ for more details. 
 
-Textile photos is _censorship resistant_ because it is built on decentralized protocols for storage and sharing, helping to prevent any form of censorship. On top of that, your your photos and messages are _encrypted directly on your device_, giving you complete control over your privacy and sharing. We've also kept the whole thing open source, because we believe transparency starts with our code. Have a look here, and in our other repos on GitHub. You could even build your own Textile-based app!
+## Development
 
-## Use it
+```sh
+# Run all the unit tests
+yarn test
 
-You can grab a [Photos Desktop release](https://github.com/textileio/photos-desktop/releases) from our GitHub repo. From there, you can grab one of our installers and install the app on your machine. It requires the Textile tray app to be running (for now), which you can grab from our [Textile Desktop releases](https://github.com/textileio/desktop/releases/latest).
-
-## Develop
-
-### Get started
-
-```
-git clone https://github.com/textileio/photos-desktop.git
-cd photos-desktop
-yarn install
+# Lint everything
+# NOTE: Linting uses `prettier` to auto-fix styling issues when possible
+yarn lint
 ```
 
-Then, in the project directory, you can run:
+You can also compile the Typescript yourself with:
 
-### `yarn start`
+```sh
+yarn build
+```
 
-Runs the app in web-development mode. It should automatically open [http://localhost:3000](http://localhost:3000) for you. The page will reload if you make edits, and you'll see any linting errors in the console.
+And even build a nice browser-compatible bundle with:
 
-### `yarn dev`
+```sh
+yarn browser
+```
 
-Runs the app in electron-development mode. It should automatically open and electron window on your system. The app will reload if you make edits, and you'll see any linting errors in the console.
+These will both build and add the exported Javascript files to `dist`, ready to be used in your next NodeJS, browser, React, Vue, or whatever app!
 
-### `yarn dist`
+## Browser
 
-Builds the app for production to the `build` folder. And then bundles it into an installer for various platforms and exports these to a `dist` folder. It correctly bundles React in production mode, optimizes the build for the best performance, and then bundles it with Electron for that native desktop feel.
+Running `yarn browser` will produce a minified `bundle.js` in `dist`. This can be included in your browser app using something like:
 
-The app is ready to be installed and enjoyed!
+```html
+<!DOCTYPE html>
+<html>
+...
+<script src="./dist/bundle.js"></script>
+...
+</html>
+```
+
+You'll have a global `var wallet` variable which gives you access to the Textile Wallet and other exported objects.
+
+## Documentation
+
+The auto-generated documentation can be found at https://textileio.github.io/js-textile-wallet/.
+
+```sh
+# Re-build the documentation
+yarn docs
+```
 
 ## Maintainer
 
@@ -81,25 +92,16 @@ The app is ready to be installed and enjoyed!
 
 ## Contributing
 
-Textile's Photos Desktop app is a work in progress. As such, there's a few things you can do right now to help out:
+This library is a work in progress. As such, there's a few things you can do right now to help out:
 
-* **Ask questions**! We'll try to help. Be sure to drop a note (on the above issue) if there is anything you'd like to work on and we'll update the issue to let others know. Also [get in touch](https://slack.textile.io) on Slack.
-* **Log bugs**, [file issues](https://github.com/textileio/photos-desktop/issues), submit pull requests!
-* **Perform code reviews**. More eyes will help a) speed the project along b) ensure quality and c) reduce possible future bugs.
-* Take a look at the code. Contributions here that would be most helpful are **top-level comments** about how it should look based on your understanding. Again, the more eyes the better.
-* **Add tests**. There can never be enough tests.
-  
+  * Ask questions! We'll try to help. Be sure to drop a note (on the above issue) if there is anything you'd like to work on and we'll update the issue to let others know. Also [get in touch](https://slack.textile.io) on Slack.
+  * Log bugs, [file issues](https://github.com/textileio/js-textile-wallet/issues), submit pull requests!
+  * **Perform code reviews**. More eyes will help a) speed the project along b) ensure quality and c) reduce possible future bugs.
+  * Take a look at [go-textile-wallet](https://github.com/textileio/go-textile-wallet) (which we intend to follow to a point). Contributions here that would be most helpful are **top-level comments** about how it should look based on our understanding. Again, the more eyes the better.
+  * **Add tests**. There can never be enough tests.
+  * **Contribute to the [Textile docs](https://github.com/textileio/docs)** with any additions or questions you have about Textile and its various implementations. A good example would be asking, "What is an Account". If you don't know a term, odds are someone else doesn't either. Eventually, we should have a good understanding of where we need to improve communications and teaching together to make Textile even better.
+
  Before you get started, be sure to read our [contributors guide](./CONTRIBUTING.md) and our [contributor covenant code of conduct](./CODE_OF_CONDUCT.md).
-
-## Contributors
-<!-- Update with yarn credit -->
-<!-- ⛔️ AUTO-GENERATED-CONTENT:START (CONTRIBUTORS) -->
-| **Commits** | **Contributor** |  
-| --- | --- |  
-| 23 | [carsonfarmer](https://github.com/carsonfarmer) |  
-| 1  | [Gozala](https://github.com/Gozala) |  
-
-<!-- ⛔️ AUTO-GENERATED-CONTENT:END -->
 
 ## License
 

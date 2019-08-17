@@ -38,7 +38,7 @@ Generally, Textile projects can be initialized with something like:
 
 **Step 3:** Install the Application with `yarn` or `npm i`
 
-See each indiviual project's `README` for details.
+See each individual project's `README` for details.
 
 ### Reporting Bugs
 
