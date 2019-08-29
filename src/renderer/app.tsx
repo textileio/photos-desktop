@@ -21,12 +21,23 @@ import backgroundPath from './assets/code.svg'
 )
 @observer
 class App extends ConnectedComponent<RouteComponentProps, Stores> {
-  componentWillMount() {
-    if ([...this.stores.user.repos].length > 0) {
-      navigate('/start')
+  reRoute = () => {
+    if (this.stores.user.page === '/' || this.stores.user.page === '/loading') {
+      if ([...this.stores.user.repos].length > 0) {
+        navigate('/start')
+        return
+      }
+      navigate('/welcome')
       return
     }
-    navigate('/welcome')
+    navigate(this.stores.user.page)
+  }
+  componentWillMount() {
+    this.reRoute()
+  }
+  componentWillUpdate() {
+    console.log('here')
+    this.reRoute()
   }
   render() {
     return (

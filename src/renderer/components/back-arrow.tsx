@@ -11,6 +11,7 @@ export default class BackArrow extends Component<LabelProps> {
         basic
         size="large"
         circular
+        onClick={() => window.history.back()}
         style={{
           color: inverted ? 'white' : 'black',
           position: 'absolute',

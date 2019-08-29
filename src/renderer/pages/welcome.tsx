@@ -8,7 +8,10 @@ import friends from '../assets/friends@3x.png'
 import permissions from '../assets/permissions@3x.png'
 import notifications from '../assets/notifications@3x.png'
 
-@connect('store')
+@connect(
+  'user',
+  'store',
+)
 @observer
 export default class Welcome extends ConnectedComponent<RouteComponentProps, Stores> {
   handleAutomatic = () => this.props.navigate && this.props.navigate('/automatic')
@@ -48,6 +51,7 @@ export default class Welcome extends ConnectedComponent<RouteComponentProps, Sto
             <Image centered size="small" disabled src={notifications} />
           </Grid.Column>
         </Grid.Row>
+        {/* {user.repos.length > 0 && <BackArrow />} */}
       </Grid>
     )
   }
