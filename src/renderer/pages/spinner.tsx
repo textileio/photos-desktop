@@ -1,9 +1,9 @@
 import React from 'react'
-import { Dimmer, Loader } from 'semantic-ui-react'
+import { Dimmer, Loader, DimmerProps } from 'semantic-ui-react'
 import { RouteComponentProps } from '@reach/router'
 
-const Spinner = (_props: RouteComponentProps) => (
-  <Dimmer inverted active>
+const Spinner = (props: RouteComponentProps & DimmerProps) => (
+  <Dimmer {...props} inverted>
     <Loader size="massive" />
   </Dimmer>
 )

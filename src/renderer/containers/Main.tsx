@@ -6,7 +6,7 @@ import FeedView from './FeedView'
 import InfoSidebar from './InfoSidebar'
 import OmniForm, { OmniFormState } from '../components/OmniForm'
 import GroupSummary from './GroupSummary'
-import { Grid, Sidebar, Image, Feed, Confirm } from 'semantic-ui-react'
+import { Grid, Sidebar, Image, Feed, Confirm, Header } from 'semantic-ui-react'
 import { ConnectedComponent, connect } from '../components/ConnectedComponent'
 import { Stores } from '../stores'
 import { RouteComponentProps } from '@reach/router'
@@ -15,8 +15,24 @@ import { clipboard } from 'electron'
 @connect('store')
 @observer
 class Main extends ConnectedComponent<RouteComponentProps, Stores> {
+  componentDidMount() {
+    this.fetchInfo()
+  }
+  // componentDidUpdate() {
+  //   this.fetchInfo()
+  // }
+  fetchInfo() {
+    const { store } = this.stores
+    store.fetchGroups()
+    store.fetchContacts()
+  }
   handleSubmit = (data: OmniFormState) => {
     const { store } = this.stores
+    const zipMatch =
+      data.file && (data.file.type.match('application/zip') || data.file.type.match('application/x-zip-compressed'))
+    if (zipMatch && data.file) {
+      store.addFacebookZip(data.file.path)
+    }
     if (!store.groups || store.currentGroupId === undefined) {
       return
     }
@@ -41,6 +57,8 @@ class Main extends ConnectedComponent<RouteComponentProps, Stores> {
   }
   render() {
     const { store } = this.stores
+    const hasGroup = store.currentGroup
+    const hasContent = hasGroup && store.currentFeed && store.currentFeed.items.length
     return (
       <div>
         <Sidebar.Pushable>
@@ -82,10 +100,16 @@ class Main extends ConnectedComponent<RouteComponentProps, Stores> {
                 </Grid.Column>
                 <Grid.Column width={13} style={{ padding: 0 }}>
                   <Grid.Row>
-                    <FeedView />
+                    {hasContent && <FeedView />}
+                    {!hasContent && (
+                      <Header textAlign="center" style={{ marginTop: '2em' }}>
+                        Nothing to see here, yet!
+                        <Header.Subheader>Maybe its time to create a group 👈 or add some content 👇?</Header.Subheader>
+                      </Header>
+                    )}
                   </Grid.Row>
                   <Grid.Row style={{ padding: '0 1em' }}>
-                    <OmniForm images onSubmit={this.handleSubmit} />
+                    {hasGroup && <OmniForm images onSubmit={this.handleSubmit} />}
                   </Grid.Row>
                 </Grid.Column>
               </Grid.Row>

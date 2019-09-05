@@ -14,9 +14,11 @@ import notifications from '../assets/notifications@3x.png'
 )
 @observer
 export default class Welcome extends ConnectedComponent<RouteComponentProps, Stores> {
-  handleAutomatic = () => this.props.navigate && this.props.navigate('/automatic')
-  handleSignin = () => this.props.navigate && this.props.navigate('/signin')
-  handleManual = () => this.props.navigate && this.props.navigate('/manual')
+  handleAutomatic = () => {
+    this.stores.user.setPage('loading')
+    this.stores.store.initAndStartTextile(undefined, '', 'default')
+  }
+  handleSignin = () => this.stores.user.setPage('start')
   render() {
     return (
       <Grid textAlign="center" centered style={{ height: '100vh' }}>
@@ -51,7 +53,6 @@ export default class Welcome extends ConnectedComponent<RouteComponentProps, Sto
             <Image centered size="small" disabled src={notifications} />
           </Grid.Column>
         </Grid.Row>
-        {/* {user.repos.length > 0 && <BackArrow />} */}
       </Grid>
     )
   }

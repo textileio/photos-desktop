@@ -243,6 +243,7 @@ ipcMain.on('init', async (event: any, args: any) => {
   try {
     const keypair = Keypair.fromSecret(secret)
     const address = keypair.publicKey()
+    console.log(address, secret, keypair.secret())
     const repoPath = path.join(app.getPath('userData'), address).replace('Electron', 'Textile')
     // @todo: move to render process?
     // const mnemonic = await keytar.getPassword('io.textile.desktop', username)

@@ -1,5 +1,5 @@
 import React, { createRef, SyntheticEvent } from 'react'
-import { Feed, Segment, Message, Modal, Ref, Icon } from 'semantic-ui-react'
+import { Feed, Segment, Modal, Ref, Icon } from 'semantic-ui-react'
 import LazyImage from '../components/LazyImage'
 import FeedItem from '../components/FeedItem'
 import { observer } from 'mobx-react'
@@ -82,11 +82,7 @@ class FeedView extends ConnectedComponent<{}, Stores, FeedViewState> {
         </Ref>
       )
     }
-    return (
-      <div>
-        <Message icon="eye" header="Nothing to see here, yet!" content="Maybe its time to add some content?" />
-      </div>
-    )
+    return null
   }
 }
 

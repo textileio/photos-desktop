@@ -18,20 +18,21 @@ import defaultImage from '../assets/square-image.png'
 import { navigate } from '@reach/router'
 
 const catchError = (err: Error | string) => {
-  toast({
-    type: 'error',
-    icon: 'frown outline',
-    title: 'Something went wrong!',
-    description: err.toString(),
-    time: 0,
-  })
+  console.log(err)
+  // toast({
+  //   type: 'error',
+  //   icon: 'frown outline',
+  //   title: 'Something went wrong!',
+  //   description: err.toString(),
+  //   time: 0,
+  // })
 }
 
 // Currently a static store that fetches data from peer on init
 export class AppStore {
   gateway: string = 'http://127.0.0.1:5050'
   @observable profile?: Contact
-  @observable status: 'offline' | 'starting' | 'stopping' | 'online' | 'error' = 'offline'
+  @observable status: 'offline' | 'starting' | 'stopping' | 'online' | 'error' | 'loading' | 'ready' = 'offline'
   @observable imageSize: SemanticSIZES = 'large'
   @observable contacts?: ContactList
   @observable groups?: ThreadList
@@ -137,11 +138,10 @@ export class AppStore {
   }
   @action async leaveGroup(groupId: string) {
     try {
-      await textile.threads.remove(groupId)
       runInAction(() => {
         this.currentGroupId = undefined
       })
-      this.fetchGroups()
+      await textile.threads.remove(groupId)
     } catch (err) {
       catchError(err)
     }
@@ -315,11 +315,20 @@ export class AppStore {
       catchError(err)
     }
   }
+  @action async addFacebookZip(filePath: string) {
+    try {
+      if (this.online) {
+        ipcRenderer.send('addFacebookZip', { filePath })
+      }
+    } catch (err) {
+      catchError(err)
+    }
+  }
   @action async fetchGroupData(id: number, limit?: number) {
     try {
-      if (this.online && this.groups) {
+      if (this.online && this.groups && this.groups.items) {
         const group = this.groups.items[id]
-        const feed = await textile.feed.list(group.id, undefined, limit || 50, 'stacks')
+        const feed = await textile.feed.list(group.id, undefined, limit || 50, 'annotated')
         const items = feed.items.map((item: FeedItem) => {
           const payload = item.payload
           const type = payload['@type']

@@ -26,6 +26,11 @@ class OmniForm extends Component<OmniFormProps, OmniFormState> {
     event.preventDefault()
     const target = event.target as HTMLInputElement
     const file: File = (target.files as FileList)[0]
+    if (file.type.match('application/zip') || file.type.match('application/x-zip-compressed')) {
+      this.setState({ file })
+      this.handleCaption('Facebook import')
+      return
+    }
     this.setState({ file, url: URL.createObjectURL(file), modalOpen: true })
     target.value = ''
   }

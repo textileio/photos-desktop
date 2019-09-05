@@ -21,7 +21,7 @@ export default class Automatic extends ConnectedComponent<RouteComponentProps, S
             <Header as="h3">
               Create account
               <Header.Subheader>
-                Choose a username and password to backup your account passphrase and protect your local data.
+                Choose a name for your account, and optionally, choose a password to protect your local data.
               </Header.Subheader>
             </Header>
             <Login signup name password onLogin={this.handleLogin} />

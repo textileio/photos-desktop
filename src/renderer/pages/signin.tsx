@@ -3,7 +3,6 @@ import { observer } from 'mobx-react'
 import { ConnectedComponent, connect } from '../components/ConnectedComponent'
 import { Stores } from '../stores'
 import { Header, Grid, Form, Input, InputOnChangeData } from 'semantic-ui-react'
-import Login, { LoginState } from '../components/login'
 import { RouteComponentProps } from '@reach/router'
 import BackArrow from '../components/back-arrow'
 
@@ -17,8 +16,8 @@ export default class Signin extends ConnectedComponent<RouteComponentProps, Stor
   state = {
     seed: '',
   }
-  handleLogin = (data: LoginState) => {
-    this.stores.store.initAndStartTextile(this.state.seed, data.password)
+  handleLogin = () => {
+    this.stores.store.initAndStartTextile(this.state.seed, '')
   }
   handleSeedChange = (_event: FormEvent, data: InputOnChangeData) => {
     if (data.name === 'seed') {
@@ -50,8 +49,8 @@ export default class Signin extends ConnectedComponent<RouteComponentProps, Stor
                 />
               </Form.Field>
             </Form>
-            <p style={{ marginTop: '0.5em' }}>Optionally, choose a password to protect your local data.</p>
-            <Login signup={false} password onLogin={this.handleLogin} disabled={this.state.seed.length < 48} />
+            {/* <p style={{ marginTop: '0.5em' }}>Optionally, choose a password to protect your local data.</p>
+            <Login signup={false} password onLogin={this.handleLogin} disabled={this.state.seed.length < 48} /> */}
           </Grid.Column>
         </Grid.Row>
         <BackArrow />

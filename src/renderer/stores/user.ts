@@ -1,5 +1,5 @@
 import { ignore } from 'mobx-sync'
-import { observable, runInAction, observe, computed } from 'mobx'
+import { observable, runInAction, action } from 'mobx'
 import { Repo } from './models'
 import { ipcRenderer } from 'electron'
 import { navigate } from '@reach/router'
@@ -8,10 +8,14 @@ export class UserStore {
   @ignore
   loaded: boolean = false
   @ignore
-  @computed
-  get page() {
-    return window.location.pathname
+  @observable
+  page: string = 'default'
+  @action
+  setPage(page: string) {
+    this.page = page
+    navigate(`/${page}`)
   }
+  @ignore
   @observable
   repos: Repo[] = [] // @note: keep first record as latest repo
   constructor() {
@@ -20,8 +24,8 @@ export class UserStore {
         this.repos.unshift(repo)
       })
     })
-    observe(this, 'page', (change: any) => {
-      navigate(change.newValue as string)
-    })
+    // observe(this, 'page', (change: any) => {
+    //   navigate(change.newValue as string)
+    // })
   }
 }

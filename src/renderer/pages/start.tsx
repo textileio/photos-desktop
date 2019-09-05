@@ -7,6 +7,7 @@ import { Stores } from '../stores'
 import { Repo } from '../stores/models'
 import { shell } from 'electron'
 import path from 'path'
+import BackArrow from '../components/back-arrow'
 
 @connect(
   'user',
@@ -15,7 +16,15 @@ import path from 'path'
 @observer
 export default class Start extends ConnectedComponent<RouteComponentProps, Stores> {
   handleChoice = (item: Repo) => {
-    this.stores.store.startTextile(item.path).then(() => this.props.navigate && this.props.navigate('/main'))
+    const { user } = this.stores
+    user.setPage('loading')
+    this.stores.store.startTextile(item.path)
+  }
+  componentDidMount() {
+    const { user } = this.stores
+    if ([...user.repos].length < 1) {
+      user.setPage('signin')
+    }
   }
   render() {
     const { user } = this.stores
@@ -25,7 +34,7 @@ export default class Start extends ConnectedComponent<RouteComponentProps, Store
           <Grid.Column width={12} verticalAlign="middle">
             <Header as="h2">
               Welcome back!
-              <Header.Subheader>Choose an existing account</Header.Subheader>
+              <Header.Subheader>Choose an existing account, or import from an account seed</Header.Subheader>
             </Header>
           </Grid.Column>
         </Grid.Row>
@@ -33,9 +42,9 @@ export default class Start extends ConnectedComponent<RouteComponentProps, Store
           <Grid.Column width={14} verticalAlign="top">
             <Card.Group centered itemsPerRow={4}>
               {user && user.repos.map(this.renderItem)}
-              <Card link key="create-new" onClick={() => this.props.navigate && this.props.navigate('/welcome')}>
+              <Card link key="create-new" onClick={() => user.setPage('signin')}>
                 <Card.Content textAlign="center">
-                  <Card.Meta>Create new</Card.Meta>
+                  <Card.Meta>From seed...</Card.Meta>
                   <Card.Description>
                     <Icon size="large" name="plus" />
                   </Card.Description>
@@ -44,6 +53,7 @@ export default class Start extends ConnectedComponent<RouteComponentProps, Store
             </Card.Group>
           </Grid.Column>
         </Grid.Row>
+        <BackArrow />
       </Grid>
     )
   }
