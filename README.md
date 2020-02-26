@@ -1,3 +1,5 @@
+**WARNING**: **`photos-desktop` has been deprecated. It is no longer being maintained.**
+
 # Photos Desktop _(photos-desktop)_
 
 [![Made by Textile](https://img.shields.io/badge/made%20by-Textile-informational.svg?style=popout-square)](https://textile.io)
